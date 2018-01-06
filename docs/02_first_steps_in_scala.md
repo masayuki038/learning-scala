@@ -21,7 +21,45 @@ scala> 1 + 2
 
 - インタープリタは以下のように出力する
 
-```
+```scala
 res0: Int = 3
 ```
+
+- これは以下のことを示す
+  - 計算された結果を保存する変数は自動的に生成されるかユーザが定義できる(res0はResult 0の意味)
+  - コロン(:)の後に型の名前が続く(Int)
+  - イコール記号(=)
+  - 値は計算式が評価された結果である
+
+- Int型はscalaパッケージのIntクラスの名前である
+- ScalaのパッケージはJavaのパッケージに似ている
+- グローバルな名前空間のパーティションで、情報隠蔽(フルパッケージ名を記載しないと意味で)の仕組みを提供する
+- Intクラスの値はJavaのintの値に対応する
+- もう少し広げて言うと、Javaのすべてのプリミティブ型はScala側のクラスに対応がある
+- 例えばScalaのBooleanはJavaのBooleanに、scalaのFloatはJavaのfloatに対応する
+- さらに、ScalaのコードがJavaのバイトコードに変換される際、Scalaのコンパイラはプリミティブ型のパフォーマンスの恩恵を得る為に、Javaのプリミティブ型を使う
+- resXは以下のように利用できる。例えば、前回res0には3が設定されているので、res0 * 3は9になる
+
+```scala
+scala> res0 * 3
+res1: Int = 9
+```
+
+- 出力する必要があれば、"Hello, world! greeting"とタイプすれば良い
+
+```scala
+scala> println("Hello, world!")
+Hello, world!
+```
+
+println関数は、JavaのSystem.out.printlnに似ていて、標準出力に文字列を出力する
+
+
+
+
+
+
+
+
+
 
