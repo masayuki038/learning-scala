@@ -54,6 +54,98 @@ Hello, world!
 
 println関数は、JavaのSystem.out.printlnに似ていて、標準出力に文字列を出力する
 
+# Step 2. Define some variables
+- Scalaの変数には2種類ある
+- 一つはJavaのfinalの変数と同様に値の再割り当てできないval
+- もう一つはJavaのfinal無し変数と同様に値の再割り当てができるvar
+
+```scala
+scala> val msg = "Hello, world!"
+msg: String = Hello, world!
+```
+
+- このステートメントはmsgという名前の変数に"Hello, world!"という文字列を割り当てる
+- Scalaの文字列の実装はJavaのStringクラスなので、msgの型はjava.lang.Stringである
+- Javaで変数宣言をしたことがあれば、val宣言のどこにもjava.lang.StringやStringがない、という違いに気が付くだろう
+- この型推論の例が示すとおり、Scalaは型の指定を省略することができる
+- このケースでは、文字列リテラルでmsgを初期化したので、Scalaはmsgの型がStringであると推測した
+- Scalaが型を推測する時、不要に型を明記するよりもベストな選択をする
+- しかしながら、型を明記することもできる
+- 型の明記はScalaのコンパイラはあなたの意図の型を推測するだけでなく、将来コードを読む人にとっての有用なドキュメントになる
+- Javaとは対照的に、Scalaは変数名の後にコロンで区切って型を指定する
+
+```scala
+scala> val msg2: java.lang.String = "Hello again, world!"
+msg2: String = Hello again, world!
+```
+
+- あるいは、java.langの型はScalaプログラムでは省略できる
+
+```scala
+scala> val msg3: String = "Hello yet again, world!"
+msg3: String = Hello yet again, world!
+```
+
+- 最初のmsgに戻り、定義した変数は適宜使うことができる
+
+```scala
+scala> print(msg)
+Hello, world!
+```
+
+- msgはvalで宣言したので、値を再定義できない
+
+```scala
+scala> msg = "Goodby cruel world"
+<console>:11: error: reassignment to val
+       msg = "Goodby cruel world"
+```
+
+- varで宣言すれば値を再定義できる
+
+```scala
+scala> var greeting = "Hello, world!"
+greeting: String = Hello, world!
+
+scala> greeting = "Leave me alone, world!"
+greeting: String = Leave me alone, world!
+```
+
+- 複数行を入力したい場合は、最初の行の後に続けてタイプする
+- もしコードの入力が終わってなければ、インタープリタは次の行に|を表示する
+
+```scala
+scala> val multiline =
+     | "This is the next line."
+multiline: String = This is the next line.
+```
+
+- あなたの入力に何か間違いがあっても、enterが2回押されるまでは、インタープリタはさらに入力を待ち続ける
+
+```scala
+scala> val oops =
+     |
+     |
+You typed two blank lines.  Starting a new command.
+```
+
+- 本書では以降、コードを読みやすくする為に|は省略する(インタープリタにコピペしやすいように)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
