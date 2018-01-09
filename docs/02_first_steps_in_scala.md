@@ -187,15 +187,44 @@ greet: ()Unit
 - Unitの戻り値のメソッドは、それゆえ、副作用が発生する
 - greet()の場合、副作用は標準出力にフレンドリーな挨拶が出力されることである
 
+# Step 4. Write some Scala scripts
+- Scalaは大きなシステムを構築するに向いているが、スクリプトにもうってつけである
+- スクリプトはファイルに記載された順次実行されるステートメントの連続である
+- このファイルをhello.scalaと名づける
 
+```scala
+println("Hello, world, from a script!")
+```
 
+- 次に実行する
 
+```
+$ scala hello.scala
+```
 
+- すると以下のようにあいさつ文が表示される
+- Scalaスクリプトへののコマンドライン引数はargsという名前の配列を通して利用することができる
+- Scalaにおいて、配列は0から始まり、各要素にはカッコにインデックスを指定することでアクセスする
 
+```scala
+// Say hello to the first argument
+println("Hello, "+ args(0) +"!")
+```
 
+```scala
+$ scala helloarg.scala planet
+```
 
+- このコマンドにおいて、"planet"はコマンドライン引数で、スクリプト内ではargs(0)に割り当てられる
+- したがって、以下のように出力される
 
+```
+Hello, planet!
+```
 
+- Scalaのコンパイラは//から行末までの文字や、/*から*/の間の文字を無視する
+- この例では文字列を+で連結している
+- "Hello, " + "world!"は"Hello, world!"という文字列を生成する
 
 
 
