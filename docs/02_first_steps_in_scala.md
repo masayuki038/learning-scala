@@ -226,12 +226,87 @@ Hello, planet!
 - この例では文字列を+で連結している
 - "Hello, " + "world!"は"Hello, world!"という文字列を生成する
 
+# Step 5. Loop with while; decide with if
+- printargs.scalaに以下をタイプしてwhileを試してみる
 
+```scala
+  var i = 0
+  while (i < args.length) {
+    println(args(i))
+    i += 1
+  }
+```
 
+- 注意:
+  - このセクションのこの例はwhileループに関する説明であるが、ベストなScalaのデモでない
+  - 次のセクションで、配列のインデックスを使わないイテレートの方法を見ることができる
 
+- このスクリプトはi=0という変数定義でスタートする
+- 型推論はiにScalaの型のIntを与える。なぜなら、それは初期値の0の型である為
+- 次の行のwhileの構造は、i < args.lengthがfalseになるまで繰り返し実行される
+- このブロックは2つの文を持ち、それぞれの行のインデント(2スペース)はScalaで推奨されるインデントである
+- 最初の文のprintln(args(i))は、コマンドライン引数を出力する
+- 次の行のi+=1は、1をインクリメントする
+- Javaのi++, ++iはScalaでは機能しないこに注意
+- Scalaのインクリメントはi=i+1、i+=1のどちらかである必要がある
+- このスクリプトを以下のコマンドで実行する
 
+```
+  $ scala printargs.scala Scala is fun
+```
 
+- すると、以下のように出力される
 
+```
+  Scala
+  is
+  fun
+```
 
+- もっと面白いことをする為に、echoargs.scalaという新しいファイルに次のコードをタイプする
 
+```scala
+  var i = 0
+  while (i < args.length) {
+    if (i != 0)
+      print(" ")
+    print(args(i))
+    i += 1
+  }
+  println()
+```
 
+- このバージョンでは、printlnの代わりにprintを呼び出す
+- すると、すべての引数は一行の中に表示される
+- これらを読めるようにする為に、初回のループを除き、それぞれの引数の為にスペースを1つ入れた
+- while loopの中で1回目は"if (i != 0)"はfalseなので、最初の引数の前にはスペースが出力されない
+- 最終的に、すべての引数を出力した後に改行を入れるもう一つのprintlnを追加したことになる
+- この出力は実に素晴らしい
+- このスクリプトは次のコマンドで実行する
+
+```
+$ scala echoargs.scala Scala is even more fun
+```
+
+- 以下のように出力される
+
+```
+Scala is even more fun
+```
+
+- Scalaでは、Javaと同様、whileやifのカッコの中にbooleanの表現を入れる必要がある
+- 言い換えると、Rubyのようにカッコを入れず"if i < 10"と記載することはできない
+- もう一つのJavaの類似点として、ブロックに1ステートメントしかない場合、echoargs.scalaと同様にカーリー括弧は省略することができる
+- また、Javaとは違い、行末にセミコロンを付ない。(以下のように、付けても動くか、うるさい感じになる)
+
+```scala
+var i = 0;
+while (i < args.length) {
+  if (i != 0) {
+    print(" ");
+  }
+  print(args(i));
+  i += 1;
+}
+println();
+```
