@@ -11,7 +11,7 @@
 - コンストラクタのカッコ内にオブジェクトを渡すことによって、インスタンスのパラメータを設定する
 - 例えば、以下のScalaコードは12345を指定してBigIntegerのインスタンスを生成する
 
-```
+```scala
 val big = new java.math.BigInteger("12345")
 ```
 
@@ -19,7 +19,7 @@ val big = new java.math.BigInteger("12345")
 - 例えば以下の例では、greetStringは先頭行でパラメータ'3'を指定して、配列の長さ3で要素の型がStringの配列を生成する
 - 型と値をパラメータに取る時、ブラケット括弧内に型が最初に来て、その後にカッコ内に値を指定する
 
-```
+```scala
 val greetStrings = new Array[String](3)
 
 greetStrings(0) = "Hello"
@@ -36,7 +36,7 @@ greetStrings(2) = "world!\n"
 - しかしArray[String]の要素は変更することができる。つまり、配列そのものはmutableである
 - 最後の2行は、greetStringsの配列の各要素を次々と出力する
 
-```
+```scala
 for (i <- 0 to 2)
   print(greetStrings(i))
 ```
@@ -51,3 +51,58 @@ for (i <- 0 to 2)
 - 代わりに、+,-,*,/ はメソッドの名前として使える
 - これにより、Step1で示した`1+2`は、実際にはオブジェクト1の+メソッドが起動し、オブジェクト2がパラメータとして渡されている
 
+- この例のもう一つ重要なポイントは、なぜ配列の要素に括弧でアクセスできるか、というところだ
+- 配列はScalaにおいて他のクラスと同様に単純なインスタンスである
+- 変数に一つ以上の値を囲む括弧を適用すると、Scalaはその変数に対してapplyという名前のメソッドを実行するコードに変換する
+- なので、`greetStrings(i)`は`greetStrings.apply(i)`に変換される
+- このScalaの配列の要素へのアクセスは、他のメソッド呼び出しと同様である
+- この原理は配列に制限されない
+- オブジェクトに、括弧で引数を適用すると、どんなものでもapplyメソッドの呼び出しに変換される
+- もちろんこれはオブジェクトの型にapplyメソッドが実際に定義された場合のみである
+- なので、これは特別なルールではなく、一般的なルールである
+- 同じように、括弧に一つ以上の引数が指定された変数に値を設定する時、コンパイラは括弧内の引数と右辺の値を取るupdateメソッドの呼び出しに変換する
+
+```scala
+greetStrtings(0) = "Hello"
+```
+
+- は、以下に変換される
+
+```scala
+greetStrings.update(0, "Hellow")
+```
+
+- これにより、以下の文は3.1の例と文法上は同じである
+
+```scala
+val greetStrings = new Array[String](3)
+
+greetStrings.update(0, "Hello")
+greetStrings.update(1, ", ")
+greetStrings.update(2, "world!\n")
+
+for (i <- 0.to(2))
+  print(greetStrings.apply(i))
+```
+
+- Scalaは配列から式までをオブジェクトで扱うことによって、すべてをシンプルな発想で扱うことができる
+- Javaのprimitiveとwrapperクラスの違いや、配列とオブジェクトの違いのような、特別なケースを覚える必要がない
+- そのうえ、この統一性により、重大なパフォーマンスコストを被ることはない
+- Scalaコンパイラは可能な限りJavaの配列やprimitive型、ネイティブな演算を利用するコードを出力する
+- このステップのここまでの例はコンパイルして動くけれども、Scalaは通常の配列の初期化についてより短い書き方を提供する
+
+```scala
+val numNames = Array("zero", "one", "two")
+```
+
+- このコードは長さ3の"zero", "one", "two"の文字列で初期化された配列を生成する
+- コンパイラは暗黙的に配列をArray[String]にして、文字列を渡す
+- これは実際には新しい配列を返すファクトリーメソッドを呼び出している
+- このapplyメソッドは引数の数分の変数を受け取る
+- このメソッドはArrayのコンパニオンオブジェクトで定義される
+- Javaでいうと、Arrayクラスのapplyというstaticメソッドが呼び出されるイメージ
+- このapplyの呼び出し方をより詳細に書くと以下のとおりである
+
+```scala
+val numNames2 = Array.apply("zero", "one", "two")
+```
