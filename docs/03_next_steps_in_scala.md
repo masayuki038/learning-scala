@@ -183,6 +183,10 @@ scala> val oneTwoThree2 = 1 :: 2 :: 3
 - なぜListの後ろに追加しないのか
   - Listには(後ろに追加する)append操作がない
   - これは、appendはListのサイズが大きくなってくると時間が線形に増えていくのに対し、`::`(先頭に追加)は一定の時間しかかからない為だ
+    - ScalaのListがhead, tailの2つの要素で構成されているので、`list.prepend(N)`は`new List(head=N;tail=list)`を返せば良い
+      - immutableだが、リストの要素を全てshallow copyしたりする必要がない
+        - https://stackoverflow.com/a/30648447/1352781
+        - http://www.ne.jp/asahi/hishidama/home/tech/scala/collection/list.html
   - 一つのやり方としては、Listの先頭に値を追加していき、最後にreverseメソッドを呼び出す、という方法である
   - あるいはListBufferというmutableなリストを使う
 
