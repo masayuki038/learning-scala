@@ -106,3 +106,83 @@ val numNames = Array("zero", "one", "two")
 ```scala
 val numNames2 = Array.apply("zero", "one", "two")
 ```
+
+# Step 8. Use lists
+- 関数型スタイルの大きなアイデアの一つは、メソッドが副作用を持つべきではない、ということだ
+- メソッドは計算して値を返すだけである
+- このアプローチの良い効果は、メソッドがゴチャゴチャにならないことだ
+- それゆえ、信頼しやすくなるし、再利用しやすくなる
+- もうひとつの効果は、型チェッカーによってメソッドの入出力のすべてがチェックされることだ
+- それゆえ、型エラーが現れやすくなる
+- 関数型の哲学のオブジェクトへの適用は、オブジェクトをimmutableにする
+- 前回説明したように、Scalaでは配列はmutableである
+- 連続する同じ型のオブジェクトをimmutableで扱う為に、ScalaのListクラスが使える
+- 配列と同様に、List[String]は文字列だけを含む
+- ScalaのListであるscala.Listは、Javaのjava.util.Listとは違う。ScalaのListは常にimmutableである
+- より一般的にいうと、ScalaのListは関数型のスタイルでプログラミングできるようなデザインになっている
+
+```scala
+val oneTwoThree = List(1, 2, 3)
+```
+
+- このコードは、Listを作成する際に1,2,3の整数値で初期化し、oneTwoThreeという名前の変数に設定する
+- Listはimmutableなので、JavaのStringのような動きになる
+- listのメソッドを呼び出した時、そのlistの中の値が変わるように見えるかもしれないが、実際には新しいlistが返ってくる
+- Listは`:::`という名前の連結メソッドを持っている
+
+```scala
+val oneTwo = List(1, 2)
+val threeFour = List(3, 4)
+val oneTwoThreeFour = oneTwo ::: threeFour
+println("" + oneTwo + " and " + threeFour + "were not mutated.")
+println("Thus, " + oneTwoThreeFour + " is a new list.")
+```
+
+- このスクリプトを実行すると、以下のように出力される
+
+```scala
+List(1, 2) and List(3, 4) were not mutated.
+Thus, List(1, 2, 3, 4) is a new list.
+```
+
+- Listの最も良く使われる演算子は"cons"と呼ばれる`::`だろう
+- Consは既存のlistの先頭に新しい要素を追加し、そのlistを返す
+- 例えば、以下のスクリプトを実行する
+
+```scala
+val twoThree = List(2, 3)
+val oneTwoThree = 1 :: twoThree
+println(oneTwoThree)
+```
+
+- これは以下のように出力される
+
+```scala
+List(1, 2, 3)
+```
+
+- 注意
+  - 演算子のメソッドは通常、例えば`a * b`であれば、`a.*(b)`のように左辺のメソッドが呼び出される
+  - しかし演算子の最後に`:`が付く場合、例えば`1 :: twoThree`であれば、`twoThree.::(1)`のように左辺のメソッドが呼び出される
+
+- 空のリストを指定する簡単な方法はNilで、新しいListを作成する一つの方法は、Nilを最後の要素にしてcons演算子で結合することである
+
+```scala
+scala> val oneTwoThree = 1 :: 2 :: 3 :: Nil
+oneTwoThree: List[Int] = List(1, 2, 3)
+```
+
+- Nilは新しいリストを作る為に必要で、Nilを除くとエラーになる
+
+```scala
+scala> val oneTwoThree2 = 1 :: 2 :: 3
+<console>:10: error: value :: is not a member of Int
+       val oneTwoThree2 = 1 :: 2 :: 3
+```
+
+- なぜListの後ろに追加しないのか
+  - Listには(後ろに追加する)append操作がない
+  - これは、appendはListのサイズが大きくなってくると時間が線形に増えていくのに対し、`::`(先頭に追加)は一定の時間しかかからない為だ
+  - 一つのやり方としては、Listの先頭に値を追加していき、最後にreverseメソッドを呼び出す、という方法である
+  - あるいはListBufferというmutableなリストを使う
+
