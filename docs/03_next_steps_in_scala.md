@@ -190,3 +190,29 @@ scala> val oneTwoThree2 = 1 :: 2 :: 3
   - 一つのやり方としては、Listの先頭に値を追加していき、最後にreverseメソッドを呼び出す、という方法である
   - あるいはListBufferというmutableなリストを使う
 
+# Step 9. Use tuples
+- tupleはリストとは違い異なる型を格納することができる
+- JavaであればJavaBeanのようなクラスを作って複数の値を格納して返すところを、Scalaではtupleで簡単に返すことができる
+- tupleの生成は括弧の中に要素を,(コンマ)で区切って指定する
+- tupleへのアクセスは、.(ドット)、_(アンダースコア)、そして1から始まるインデックスを使う
+
+```scala
+val pair = (99, "Luftballons")
+println(pair._1)
+println(pair._2)
+```
+
+- 上記の例では、Int型の99と、文字列型の"Luftballons"を指定してtupleを作っている
+- Scalaはこのtupleを暗黙裡にTuple2[Int, String]に変換する
+- 次に、このtupleの_1にアクセスすると、最初の要素(99)が返る
+- この.(ドット)の使い方は、通常のフィールドへのアクセスややメソッド呼び出しと同じで、この場合は_1というフィールドにアクセスしている
+- このスクリプトを実行すると、以下のように表示される
+
+```sh
+99
+LuftBallons
+```
+
+- ('u', 'r', "the", 1, 4, "me")の型はTuple6[Char, Char, String, Int, Int, String]である
+- tupleの要素に(N)でアクセスしないのは、tupleの各要素の型が同じではないから
+- indexが0からではなく1から始まっているのは、静的型のHaskellやMLがそうである為
