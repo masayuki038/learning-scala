@@ -216,3 +216,67 @@ LuftBallons
 - ('u', 'r', "the", 1, 4, "me")の型はTuple6[Char, Char, String, Int, Int, String]である
 - tupleの要素に(N)でアクセスしないのは、tupleの各要素の型が同じではないから
 - indexが0からではなく1から始まっているのは、静的型のHaskellやMLがそうである為
+
+# Step 10. Use sets and maps
+- Scalaは関数型、命令型の2つのスタイルの利点を使えるようにする為、コレクションライブラリはmutableとimmutableで差別化のポイントがある
+- SetやMapはクラス階層によってmutableやimmutableが異なっている
+- Scalaには以下の3つのSetがあり、それぞれパッケージが違う
+  - scala.collection.Set
+  - scala.collection.immutable.Set
+  - scala.collection.mutable.Set
+
+```scala
+var jetSet = Set("Boeing", "Airbus")
+jetSet += "Lear"
+println(jetSet.contains("Cessna"))
+```
+
+- 上記コードのSetはデフォルトのimmutableなSetが返る
+- ScalaコンパイラはjetSetの型をimmutableなSet[String]と推測する
+- immutableなSetもmutableなSetも`+`メソッドを持っているが、それぞれで動きは異なる
+- mutableの方は自身に要素を追加するのに対して、immutableの方は新しいSetを返す
+- 上記コードはimmutableなSetなので、`+`メソッドにより新しいSetが返る
+- mutableなSetは`+=`メソッドを持っているが、immutableなSetは持っていない
+- このケースでは、`jetSet += "Lear"`は本質的には以下のようになる
+
+```scala
+jetSet = jetSet + "Lear"
+```
+- それゆえ、前記のコードの2行目は"Boeing", "Airbus", "Lear"を含む新しいSetをjetSetに再び設定している
+- そして、最後の行で"Cessna"が含まれるか確認している(これは期待通り、falseが出力される)
+- mutableなSetの場合はimportを使う必要がある
+
+```scala
+import scala.collection.mutable.Set
+
+val movieSet = Set("Hitch", "Poltergeist")
+movieSet += "Sherk"
+println(movieSet)
+```
+
+- 最初の行でmutableなSetをimportしている
+- Javaと同様に、importステートメントはパッケージ名が付いた長い名前の代わりに、Setのような短い簡潔な名前を使えるようになる
+- その結果、Scalaコンパイラは3行名のSetをscala.collection.mutable.Setと認識する
+- `+=`メソッドは、scala.collection.mutable.Setの`+=`メソッドである
+  - immutableなSetの時のように、`movieSet = movieSet + "Sherk"`ではない
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
