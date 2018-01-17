@@ -260,8 +260,34 @@ println(movieSet)
 - `+=`メソッドは、scala.collection.mutable.Setの`+=`メソッドである
   - immutableなSetの時のように、`movieSet = movieSet + "Sherk"`ではない
 
+- immutableなSetやmutableなdefaultのSet実装を提供するSetFactoryメソッドは、様々なシチュエーションでどのSetが欲しいか明示するのに重要になってくる
+- MapもSetと同様、immutableとmutableを持つクラス階層になっている
 
+```scala
+import scala.collection.mutable.Map
 
+val treasureMap = Map[Int, String]()
+treasureMap += (1 -> "Go to island.")
+treasureMap += (2 -> "Find big X on ground.")
+treasureMap += (3 -> "Dig.")
+println(treasureMpa(2))
+```
+
+- 前記のコードで、Scalaコンパイラは`"1 -> "Go to island."`を`(1).->("Go to island.")`と変換する
+- 故に、`1 -> "Go to island."`は、実際には値1のintegerの`->`メソッドに"Go to island"を渡している
+- この->メソッドはkeyとvalueの2つの値を保存したtupleを返す
+- そしてこのtupleをtreasureMapの`+=`メソッドに渡す
+- defaultはimmutable Mapなので、immutable Mapを使う時、明示的なimport文は不要である
+
+```scala
+val romanNumeral = Map(
+  1 -> "I", 2 -> "II", 3 -> "III", 4 -> "IV", 5 -> "V"
+)
+println(romanNumeral(4))
+```
+
+- この例にはimport文が無いので、1行目のMapにはdefaultのscala.collection.immutable.Mapが返ってくる
+- 5つのkey/valueのtupleをmapのFactoryメソッドに渡し、渡されたkey/valueを格納するimmutable Mapを取得している
 
 
 
