@@ -289,8 +289,45 @@ println(romanNumeral(4))
 - この例にはimport文が無いので、1行目のMapにはdefaultのscala.collection.immutable.Mapが返ってくる
 - 5つのkey/valueのtupleをmapのFactoryメソッドに渡し、渡されたkey/valueを格納するimmutable Mapを取得している
 
+# Step 11. Learn to recognize the functional style
+- varがいたるところにあったら、そのプログラムは命令型プログラミングだろう
+- 関数型に移行する一つの方法は、プログラムからvarを無くすことである
+- JavaやC++、C#の変数は通常、varの挙動になる
+- HaskellやOCaml、Erlangの変数は、valの挙動になる
+- Scalaにおいては、varもvalもどちらも有用で、悪いものではない。使い分けて良い
+- この哲学に同意したとしても、コードにvarがあれば、まずvarを取り除く方法を見つけたいと思うかもしれない
 
+```scala
+def printArgs(args: Array[String]): Unit = {
+  var i = 0
+  while (i < args.length) {
+    println(args(i))
+    i += 1
+  }
+}
+```
 
+- 上記コードを、varを取り除いて関数型スタイルにするには、以下のようにする
+
+```scala
+def printArgs(args: Array[String]): Unit = {
+  for (arg <- args) {
+    println(arg)
+  }
+}
+```
+
+- あるいは、このようにする
+
+```scala
+def printArgs(args: Array[String]): Unit = {
+  args.foreach(println)
+}
+```
+
+- このプログラムはvarを少なくするメリットを示している
+- リファクタリングされたコードは、元のコードと比べて、明快でより短く、エラーが少なくなる傾向になっている
+- 実際、Scalaが関数型スタイルを推奨しているのは、コードをより分かりやすく、エラーが少なくなるように書けるからである
 
 
 
