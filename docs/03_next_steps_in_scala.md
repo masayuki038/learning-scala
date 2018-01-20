@@ -408,6 +408,87 @@ if (args.length > 0) {
   47 |   Console.err.println("Please enter filename")
 ```
 
+- これを行う為には、2回ループする必要がある
+- 1回目は、全行の行数をチェックして、行数のmax値を取ること
+- 2回目は、その行数のmax値を使って、各々の行を出力すること
+- 2回イテレートする為に、イテレータを変数に割り当てておく
+
+```scala
+val lines = Source.formLine(args(0)).getLines.toList
+```
+
+- `getLines`はイテレータを返すが、イテレータは一回まわしたら終わりなので、この最後の`toList`は必要になる
+- `toList`を読んでListを取得することによって、何度でもイテレータを取得することができる。ファイルの全行をメモリに持つコストは1回で済む
+- 次に、各行ごとに行の長さをカウント(その長さの文字列の長さ)する為に、小さな関数に分ける
+
+```scala
+def widthOfLength(s: String) = s.length.toString.length
+```
+
+- この関数は以下のように使う
+
+```scala
+var maxWidth = 0
+for (line <- lines)
+  maxWidth = maxWidth.max(widthOfLength(line))
+```
+
+- maxメソッドは、Intのオブジェクトで起動し、自身の値と指定された値のうち大きい方の値を返す
+- varを使うやり方を好まなければ、以下のような方法もある
+
+```scala
+val longestLine = lines.reduceLeft(
+  (a, b) = if (a.length > b.length) a else b
+)
+```
+
+- `reduceLeft`メソッドは最初の2行に対して関数が実行され、その結果と次の行に対してまた関数が実行されていき、最終的にリストの全行が走査される
+- それぞれの実行では、これまで遭遇してきた行の中で最も長い行が結果として返る
+- これを使って、widthOfLengthに一番長い行を渡すことで、一番長い行の長さを計算することができる
+
+```scala
+val maxWidth = widthOfLength(longestLine)
+```
+
+- 残りはフォーマットの部分である
+
+```scala
+for (line <- lines) {
+  val numSpaces = maxWidth - widthOfLength(line)
+  val padding = " " * numspaces
+  print(padding + line.length + " | " + line)
+}```
+
+- スクリプト全体は以下のようになる
+
+```scala
+import scala.io.Source
+
+def widthOfLength(s: String) = s.length.toString.length
+
+def widthOfLength(s: String) = s.length.toString.length
+
+if (args.length > 0) {
+  val lines = Source.fromFile(args(0)).getLines.toList
+
+  val longestLine = lines.reduceLeft(
+    (a, b) => if (a.length > b.length) a else b
+  )
+  val maxWidth = widthOfLength(longestLine)
+
+  for (line <- lines) {
+    val numSpaces = maxWidth - widthOfLength(line)
+    val padding = " " * numSpaces
+    println(padding + line.length + " | " + line)
+  }
+} else {
+  Console.err.println("Please enter filename")
+}
+```
+
+# Conclusion
+- この章で得た知識を使って、Scalaで、特にスクリプトを使って小さなタスクを始めることができるはず
+- この後の章では、これらのトピックの詳細に飛び込んだり、ここでは語られなかった他のトピックを紹介する
 
 
 
