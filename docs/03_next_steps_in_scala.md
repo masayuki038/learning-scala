@@ -359,12 +359,54 @@ assert(res == "zero\none\ntwo")
 - 命令型のスタイルの方がフィットする場面では、躊躇なくそれを使うべき
 - なるべくvalやimmutableな関数を使い、必要だと判断した場面でのみvarやmutableな関数を使う方が良い
 
+# Step 12. Read lines from a file
+- 毎日、ファイルの一行一行を処理するような小さいタスクを行うスクリプトについて考える
+- このセクションでは、ファイルから一行一行読んで、それぞれを出力するスクリプトを作成する
 
+```scala
+import scala.io.Source
 
+if (args.length > 0) {
+  for (line <- Source.fromFile(args(0)).getLines)
+    println(line.length + " " + line)
+} else {
+  Console.err.println("Please enter filename")
+}
+```
 
+- このスクリプトはscala.ioからSourceクラスをインポートするところから始まる
+- 次に少なくともプログラム引数が1つ指定されているかチェックする
+- ` Source.fromFile(args(0))`は、指定されたファイルを開き、Sourceオブジェクトとして返す
+- `getLine`メソッドは、改行を含めたファイルの各行を保持する`Iterator[String]`を返す
+- for文はそのイテレータを使ってループし、その中で、各行の文字数、スペース、行自体を出力する
+- プログラム引数が指定されなかった場合は、エラー出力にメッセージを出力する
+- このスクリプト自体をプログラム引数として渡すと、以下のように表示される
 
+```scala
+  23 import scala.io.Source
+  1
+  23 if (args.length > 0) {
+  1
+  50   for (line <- Source.fromFile(args(0)).getLines)
+  36     print(line.length +" "+ line)
+  2 }
+  5 else
+  47   Console.err.println("Please enter filename")
+```
 
+- この出力を、行数の欄を右詰めにし、パイプを追加すると、以下のようになる
 
+```scala
+  23 | import scala.io.Source
+   1 |
+  23 | if (args.length > 0) {
+   1 |
+  50 |   for (line <- Source.fromFile(args(0)).getLines)
+  34 |     print(line.length +" "+ line)
+   2 | }
+   5 | else
+  47 |   Console.err.println("Please enter filename")
+```
 
 
 
