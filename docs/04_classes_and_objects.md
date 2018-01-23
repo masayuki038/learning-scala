@@ -58,13 +58,96 @@ acc = new ChecksumAccumulator
 - つまり、accは一度割り当てたら常に同じChecksumAccumulatorのオブジェクトを参照するが、フィールドは時間とともに変わる
 - オブジェクトの堅牢性を保つ重要な方法は、オブジェクトの状態 - インスタンス変数の値 - が常に正しい状態を保っていることである
 - この最初のステップは、外部からフィールドを直接変更しないようにする為に、フィールドをprivateにすることである
-- privateメソッドは同じクラスからしかアクセスできない
+- privateメソッドは同じクラスからしかアクセスできないので、状態を変更できるすべてのコードをクラスの中に閉じ込める
+- privateフィールドを宣言するには、フィールド宣言の先頭にprivateをつける
 
+```scala
+class ChecksumAccumulator {
+  private var sum = 0
+}
+```
 
+- `ChecksumAccumulator`はこのように定義されると、クラスの外からsumにアクセスしようとしても失敗する
 
+```scala
+val acc = new ChecksumAccumulator
+ass.sum = 5 // Won't compile, because sum is private
+```
 
+- Note: フィールドをpublicにするには、アクセス修飾子を指定しなければ良い
+- 別の言い方をすると、Javaはpublicと指定する必要があるが、Scalaは何も指定する必要がない
+- publicはScalaのデフォルトのアクセスレベルである
 
+- 今、sumはprivateなので、そのクラスの中のコードでしかsumにアクセスすることができない
+- このように、ChecksumAccmulatorはsumを操作するメソッドを定義しない限り、あまり役に立たない
 
+```scala
+class ChecksumAccumulator {
+  private var sum = 0
+
+  def add(b: Byte): Unit = {
+    sum += b
+  }
+  def checksum(): Int = {
+    return ~(sum & 0xFF) + 1
+  }
+}
+```
+
+- Scalaでは、メソッドの引数はvalである
+- ChecksumAccumulatorに、必要なメソッドを追加したけれども、これらはもっと簡潔に書くことができる
+- まず、checksumメソッドの最後のreturnは不要なので、省略できる
+- 明示的にreturnステートメントがない場合、そのメソッドで最後に評価された値が返る
+- 推奨するメソッドのスタイルは、reutrnの明記をしないこと、特に複数のreturnの明記は避ける、というものである
+- returnを記載する代わりに、それぞれのメソッドは一つの値を返す式と考える
+- この哲学はメソッドを小さくし、大きなメソッドを複数の小さなメソッドに分割しやすくする
+- 一方で、設計の選択はコンテキストに依る。もし望むならば、Scalaで複数のreturnを明記するようにも書ける
+- すべてのchecksumは値の計算なので、明示的なreturnは不要である
+- メソッドを短くするもう一つの方法は、メソッドが一つの式だけ計算するのであれば、カーリー括弧を省略することだ
+- もし結果を返す式が短いのであれば、defと同じ行に記載することもできる
+
+```scala
+class ChecksumAccumulator {
+  private var sum = 0
+  def add(b: Byte): Unit = sum + b
+  def checksum(): Int = ~(sum & 0xFF) + 1
+}
+```
+
+- addメソッドのように戻り値がUnitのメソッドは副作用がある
+- このようなメソッドのもう一つの書き方は、=記号を省略して、関数本体をカーリー括弧で囲むことである
+
+```scala
+class ChecksumAccumulator {
+  private var sum = 0
+  def add(b: Byte) {sum + b}
+  def checksum(): Int = ~(sum & 0xFF) + 1
+}
+```
+
+- 関数本体の手前の=記号を省略すると、戻り値の型は基本的にUnitになる
+- 以下の例は、最終結果が文字列だったとしても、=記号をつけないと、文字列をUnitに変換して値が失われる
+
+```scala
+scala> def f(): Unit = "this String gets lost"
+f: ()Unit
+```
+
+- =記号のの代わりにカーリー括弧をつけても、明示的にUnitと記載した場合と同じである
+
+```scala
+scala> def g() {"this String gets lost too"}
+```
+
+- Unitではない値を返したい場合は、=記号をつければ良い
+
+```scala
+scala> def h() = {"this String gets returned!"}
+h: ()java.lang.String
+
+scala> h
+res0: java.lang.String = this String gets returned
+````!
 
 
 
