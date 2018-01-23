@@ -147,7 +147,7 @@ h: ()java.lang.String
 
 scala> h
 res0: java.lang.String = this String gets returned
-````!
+```
 
 
 
