@@ -190,14 +190,58 @@ x
   - 2. 次の行が、ステートメントを始められない単語である場合
   - 3. ()や[]の内側で終わっている場合
 
+# 4.3 Singleton objects
 
+```
+import scala.collection.mutable.Map
 
+object ChecksumAccumulator {
+  object ChecksumAccumulator {
+    private val cache = Map[String, Int]()
 
+    def calculate(s: String): Int =
+      if (cache.contains(s))
+        cache(s)
+      else {
+        val acc = new ChecksumAccumulator
+        for (c <- s)
+          acc.add(c.toByte)
+        val cs = ac.checksum()
+        cache += (s -> cs)
+        cs
+      }
+  }
+}
+```
 
+- Scalaにはstaticメンバいないが、代わりにSingletonオブジェクトがある
+- Singletonオブジェクトを定義するには、classキーワードではなくobjectキーワードを使う
+- 前記のChecksumAccumulatorという名前のSingletonオブジェクトは、同じファイル内のChecksumAccmulatorクラスと同じ名前である
+- クラス名と同じ名前のSingletonオブジェクトをコンパニオンオブジェクトと呼ぶ
+- 同じく、クラス名をコンパニオンクラスと呼ぶ
+- コンパニオンオブジェクトとコンパニオンクラスは各々のprivateメンバにアクセスできる
+- SingletonのChecksumAccumulatorはStringを引数に取るcalculateという1つのメソッドを持つ
+- また、以前計算したチェックサムを保存しておくcacheというmutable Mapを持つ
+- ifはは、引数で指定された文字列がすでにcacheに登録されているかどうか確認し、登録されていればそれを返す
+- elseは、ChecksumAccumulatorのインスタンスを作成してsのチェックサムを計算し、cacheにその結果を保存して、チェックサムを返す
+- Singletonオブジェクトのメソッドは、Javaのstaticメンバと同じように、`クラス名.メソッド名`で呼び出す
 
+```scala
+ChecksumCalculator.calculate("Every value is an object.")
+```
 
-
-
+- Singletonオブジェクトはstaticメソッドを持つオブジェクト以上のもので、first-classオブジェクトである
+- それゆえ、Singletonオブジェクトの名前はオブジェクトに付与された名前と考えることができる
+- Singletonオブジェクトは型を定義しているわけはない
+- 型はコンパニオンクラスが定義している
+- しかし、Singletonオブジェクトはクラスを継承したり、Traitをミックスインすることができる
+- また、継承したクラスのメソッドやミックスインしたTraitのメソッドを呼び出すことができる
+- Singletonオブジェクトとクラスの一つの違いは、Singletonオブジェクトはパラメータを指定して作成することができない
+- Singletonオブジェクトはnewキーワードを指定してインスタンス化することができない
+- おのおののSingletonオブジェクトはstatic変数から参照されるsynthetic classというインスタンスとして実装されているので、Javaのstaticの初期化と同じ作法になる
+- Singletonオブジェクトは最初にアクセスした契機で生成される
+- コンパニオンクラスとは異なる名前のSingletonオブジェクトは、standalone objectと呼ばれる
+- standalone objectは、ユーティリティメソッドを纏めたり、Scalaアプリケーションのエントリポイントとなる
 
 
 
