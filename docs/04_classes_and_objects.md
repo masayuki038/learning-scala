@@ -261,7 +261,11 @@ object Summer {
 - このimportステートメントは、それ以降において、(クラス名.メソッド名の形式ではなく)直接メソッド名を指定することができる
 - Note: ScalaはすべてのScalaファイルにおいて、暗黙裡にjava.langとscalaパッケージのメンバを、PreDefという名前のSingletonオブジェクトと同様に、importする
 - scalaパッケージに属するPredefは、沢山の有用なメソッドを含んでいる
-
+- 例えば、Scalaのソースファイルでprintlnを起動すると、Predefのprintlnが起動する
+  - Perdef.printlnは、実際にはConsole.printlnに変換される
+- assertを起動すると、Predef.assertが起動する
+- ソースコードのファイル名についてJavaと違うのは、Javaはpublicクラスの名前をソースコードのファイル名とするが、Scalaではファイル名は何でも良い
+- とはいえ、Javaのように、ファイル名はファイルに含まれるクラスで終わるスタイルを推奨する
 
 
 
