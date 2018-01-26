@@ -243,6 +243,26 @@ ChecksumCalculator.calculate("Every value is an object.")
 - コンパニオンクラスとは異なる名前のSingletonオブジェクトは、standalone objectと呼ばれる
 - standalone objectは、ユーティリティメソッドを纏めたり、Scalaアプリケーションのエントリポイントとなる
 
+# 4.4 A Scala application
+- Scalaプログラムを実行する為に、Array[String]を引数にとり、戻り値の型がUnitであるmainメソッドを持つ、Standalone Singletonオブジェクトを提供する必要がある
+
+```scala
+impiort ChecksumAccmulator.calculate
+
+object Summer {
+  def main(args: Array[String]) {
+    for (arg <- args)
+      println(arg + ": " + calculate(arg))
+  }
+}
+```
+
+- 最初の行は、前回ChecksumAccumulatorオブジェクトに定義したcalculateメソッドをimportしている
+- このimportステートメントは、それ以降において、(クラス名.メソッド名の形式ではなく)直接メソッド名を指定することができる
+- Note: ScalaはすべてのScalaファイルにおいて、暗黙裡にjava.langとscalaパッケージのメンバを、PreDefという名前のSingletonオブジェクトと同様に、importする
+- scalaパッケージに属するPredefは、沢山の有用なメソッドを含んでいる
+
+
 
 
 
