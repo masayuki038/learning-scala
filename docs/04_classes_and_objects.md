@@ -299,8 +299,31 @@ of: -213
 love: -182
 ```
 
+# 4.5 The Application trait
+- Scalaは、タイプ量を減らすことができるscala.Applicationを提供している
 
+```scala
+import ChecksumAccmululator.calculate
 
+object FallWinterSpringSummer extends Application {
+  for (season <- List("fall", "winter", "spring"))
+    println(season + ": " + calculate(season))
+}
+```
+
+- このtraitを使う為に、まずSingletonオブジェクトの名前の後に、"extends Application"と書く
+- そしてmainメソッドを書く代わりに、Singletonオブジェクトのカーリー括弧の間にmainメソッドの内容を直接書けば良い
+- これは、Singletonオブジェクトが継承したApplicationというtraitが、mainメソッドを適切なシグネチャで宣言して、Scalaアプリケーションとして利用可能にしている
+- カーリー括弧の間のコードはSingletonオブジェクトのプライマリコンストラクタとされ、クラス初期化時に実行される
+- Applicationを継承すると、mainメソッドを書くよりも短く書けるが、いくつか欠点もある
+- まず第一に、プログラム引数の配列が利用できないので、それを使いたい場合、このtraitを使えない
+- 次に、いくつかのJVMのマルチスレッドモデルの制限の為に、マルチスレッドのプログラムの場合はmainメソッドを明示的に記載する必要がある
+- いくつかのJVM実装は、Application traitによって実行される初期化コードを最適化しない
+- それゆえ、プログラムが比較的シンプルでシングルスレッドの時のみApplicationを継承するべきである
+
+# Conclusion
+- この章ではScalaのクラスやオブジェクトの基本や、コンパイルの仕方、アプリケーションの実行方法を学んだ
+- 次の章では、Scalaの基本的な型やその使い方を学ぶ
 
 
 
