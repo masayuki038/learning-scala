@@ -31,3 +31,80 @@
 - 小文字の型は将来非推奨となり削除される可能性すらある
 - 手練のJavaデベロッパーなら、Scalaの基本的な型が取りうる値が、Javaの各型が取りうる範囲と同じであることに気がつくだろう
 - これにより、ScalaのコンパイラがByteコードを生成する際にIntやDoubleなどの値をJavaのプリミティブ型に変換することができる
+
+# 5.2 Literals
+- 基本的な型はリテラルを書くことができる
+- リテラルは固定値を直接コードに書く方法である
+- ほとんどのリテラルの書き方はJavaと同様なので、Javaマスターであればこのセクションはスキップして構わない
+- Javaマスターが知るべき2つの違いは、文字列とシンボルのリテラルである
+
+## Integer literals
+- Int, Long, Short, Byteの整数リテラルは、10進数、16進数、8進数の3つの形式を取る
+- 整数リテラルは数字から始まる
+- 0xや0Xから始まる場合は16進数で、0-9とA-Fの文字を取る
+
+```scala
+scala> val hex = 0x5
+hex: Int = 5
+
+scala> val hex2 = 0x00FF
+hex2: Int = 255
+
+scala> val magic = 0xcafebabe
+magic: Int = -889275714
+```
+
+- Scalaシェルは10進で値を出力するが、リテラルの記載の仕方は気にしなくて良い
+- それゆえインタプリタは"0x00FF"で初期化されたhex2の値を255として表示する
+- 0から始まる場合は8進数で、0-7の文字を取る
+  - が、2.11で実際に試してみるとエラーになる
+
+```scala
+scala> val oct = 035
+<console>:1: error: Decimal integer literals may not have a leading zero. (Octal
+ syntax is obsolete.)
+val oct = 035
+```
+
+- 0以外の数字で始まると10進数になる
+
+```scala
+scala> val dec1 = 31
+dec1: Int = 31
+
+scala> val dec2 = 255
+dec2: Int = 255
+
+scala> val dec3 = 20
+dec3: Int = 20
+```
+
+- 整数の値がLかlで終わっている場合はLongで、それ以外はIntになる
+
+```scala
+scala> val prog = 0XCAFEBABEL
+prog: Long = 3405691582
+
+scala> val tower = 35L
+tower: Long = 35
+
+scala> val of = 31l
+of: Long = 31
+```
+
+- 整数値をShortやByt型の変数に割り当てた時、リテラル値がその型の有効な範囲内にある限り、ShortまたはByteとして扱われる
+
+```scala
+scala> val little: Short = 367
+little: Short = 367
+
+scala> val littler: Byte = 38
+littler: Byte = 38
+```
+
+
+
+
+
+
+
