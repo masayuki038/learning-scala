@@ -102,9 +102,94 @@ scala> val littler: Byte = 38
 littler: Byte = 38
 ```
 
+## Floating point literals
 
+- 浮動小数点リテラルは数字と小数点で構成され、且つEかeの後に、指数が表記されることがある
 
+```scala
+scala> val big = 1.2345
+big: Double = 1.2345
 
+scala> val bigger = 1.2345e1
+bigger: Double = 12.345
 
+scala> val biggerStill = 123E45
+biggerStill: Double = 1.23E47
+```
+
+- 指数部は、10のべき乗の数を示し、その結果はその他の部分と掛け合わせられる
+- それゆえ、1.2345e1は1.2345*10^1になる
+- 浮動小数リテラルの最後がFまたはfの場合はFloat、それ以外はDoubleとなる
+
+```scala
+scala> val littele = 1.2345F
+littele: Float = 1.2345
+
+scala> val littleBigger = 3e5f
+littleBigger: Float = 300000.0
+```
+
+- また、Doubleの浮動小数点リテラルはDまたはdでも書ける
+
+```scala
+scala> val anotherDouble = 3e5
+anotherDouble: Double = 300000.0
+
+scala> val yetanother = 3e5D
+yetanother: Double = 300000.0
+```
+
+## Character literals
+
+- 文字リテラルはシングルクォートの間にUnicodeの文字が入る形式である
+
+```scala
+scala> val a = 'A'
+a: Char = A
+```
+
+- 加えて、シングルクォートの間には、バックスラッシュの後に8進や16進のコードポイントを指定することができる
+- この8進の値は"\0"から"\377"の間になる
+- 例えば、UnicodeのAのコードポイントは8進で101である
+
+```scala
+scala> val c = '\101'
+warning: there was one deprecation warning; re-run with -deprecation for details
+c: Char = A
+
+scala> val d = '\u0041'
+d: Char = A
+
+scala> val d = '\u0044'
+d: Char = D
+```
+
+- 実際、Scalaプログラムの色んなところに出現する
+- 例えば、このように識別子にも書くことができる
+
+```scala
+scala> val B\u0041\u0044 = 1
+BAD: Int = 1
+```
+
+- 上記コードの2つのUnicode文字は、BADと認識される
+- 一般的に、このような名前の付け方は読みにくいので良くない
+- 最後に、以下のように特別なエスケープシーケンスによって表現される文字もある
+
+```scala
+scala> val backslash = '\\'
+backslash: Char = \
+```
+
+|リテラル|意味|
+|:-----------|:------------|
+|\n|line feed(\u000A)|
+|\b|backspace(\u0008)|
+|\t|tab(\0009)|
+|\f|form feed(\u000C)|
+|\r|carriage return(\u000D)|
+|\"|double quote(\u0022)|
+|\'|single quote(\u0027)|
+|\\|backslash(\u005C)|
 
 
