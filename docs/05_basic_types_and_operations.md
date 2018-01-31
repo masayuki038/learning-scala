@@ -192,4 +192,37 @@ backslash: Char = \
 |\'|single quote(\u0027)|
 |\\|backslash(\u005C)|
 
+## String literals
+
+- Stringリテラルはダブルクォートで囲んだ文字列で構成される
+
+```scala
+scala> val hello = "hello"
+hello: String = hello
+```
+
+- クォート内の文字列の書式はCharacterリテラルと同様である
+
+```scala
+scala> val escape = "\\\"\'"
+escape: String = \"'
+```
+
+- この書式は沢山のエスケープシーケンスがある文字列や複数行に渡る文字列を書きにくいので、SpalaにはRaw Stringという特別な書式がある
+- この文字列は3つのダブルクォート(""")を記載して開始、終了を表す
+- この文字列の秘密は、改行、クォーテーション、特殊文字等何でも含む(但し"""は除く)
+
+```scala
+scala> println("""Welcome to Ultamix 3000.
+     | Type "HELP" for help.""")
+Welcome to Ultamix 3000.
+Type "HELP" for help.
+```
+
+- この問題は、2行目の先頭にスペースが入ってしまうことだ
+- 一般的な解決方法は、stripMarginメソッドを使うことだ
+  - とあるけど、2.11では先頭に改行が入らない
+
+
+
 
