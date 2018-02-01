@@ -223,6 +223,46 @@ Type "HELP" for help.
 - 一般的な解決方法は、stripMarginメソッドを使うことだ
   - とあるけど、2.11では先頭に改行が入らない
 
+## Symbol literals
 
+- シンボルリテラルは'同一性'で、'同一性'は英数字の識別子である
+- このリテラルは事前に定義されたscala.Symbolのインスタンスにマッピングされる
+- 具体的には、'cymbalリテラルはSymble('cymbal)というファクトリーメソッドを起動する
+- シンボルは動的型付言語で識別子として使用される
+- 例えば、データベースのレコードをupdateするメソッドを定義したい場合、
 
+```
+scala> def updateRecordByName(r: Symbol, value: Any){}
+updateRecordByName: (r: Symbol, value: Any)Unit
+```
 
+- このメソッドはレコードの名前を示すシンボルをパラメータとして取る
+
+```scala
+updateRecordByName('favoriteAlbum, "OK Computer")
+```
+
+- シンボルでできることはほとんどないが、名前を見ることはできる
+
+```scala
+scala> val s = 'aSymbol
+s: Symbol = 'aSymbol
+
+scala> s.name
+res1: String = aSymbol
+```
+
+- シンボルはinternされている
+- もし同じシンボルを2回書いても、両方とも同じシンボルオブジェクトを参照する
+
+## Boolean literal
+
+- ブーリアン型は、true / falseの2つのリテラルを取る
+
+```scala
+scala> val bool  = true
+bool: Boolean = true
+
+scala> val fool = false
+fool: Boolean = false
+```
