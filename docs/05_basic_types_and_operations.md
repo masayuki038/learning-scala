@@ -266,3 +266,50 @@ bool: Boolean = true
 scala> val fool = false
 fool: Boolean = false
 ```
+
+# 5.3 Operators are methods
+
+- Scalaは基本型に対して強力な演算子を提供する
+- 前章で触れたとおり、これらの演算子は実際には通常のメソッドコールの一つにすぎない
+- 例えば、1 + 2は実際には(1).+(2)と同じ意味になる
+- 言い換えると、IntクラスはIntの引数を一つとりIntの結果を返す、+というメソッドを持っている
+- 明示的に呼び出すと以下のようになる
+
+```scala
+scala> val sumMore = (1).+(2)
+sumMore: Int = 3
+```
+
+- 実際には、Intは+メソッドについて、異なる型を取るいくつかのオーバーロードを持っている
+- 例えば、Longを取り、Longを返すIntメソッドがある
+- もしIntの値にLongの値を加えた時に、このメソッドは起動する
+
+```scala
+scala> val longSum = 1 + 2L
+longSum: Long = 3
+```
+
+- 演算子の記法は、他の言語と同様に+のようなメソッドに限定されない
+- どんなメソッドにもオペレータ記法を使うことができる
+- 例えば、StringにはCharacterを1つとるindexOfメソッドがある。これを演算子のように呼び出すと以下のようになる
+
+```scala
+scala> val s = "Hello, world!"
+s: String = Hello, world!
+
+scala> s indexOf 'o'
+res0: Int = 4
+```
+
+- indexOfには、2つのパラメータを取るメソッドもある
+- 演算子の記法で複数の引数があるメソッドを呼び出す場合は、引数を括弧でくくる必要がある
+
+```scala
+scala> s indexOf ('o', 5)
+res1: Int = 8
+```
+
+- さらに、Scalaには2つの演算子の記法がある。一つはprefix、もう一つはpostfixだ
+- prefix記法は、メソッドを起動するオブジェクトの前にメソッド名を配置する方法で、`-7`の'-'がこれにあたる
+- postfix記法は、オブジェクトの後にメソッド名を配置する方法で、`7 toLong`の'toLong'がこれにあたる
+
