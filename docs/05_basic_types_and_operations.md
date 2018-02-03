@@ -312,4 +312,42 @@ res1: Int = 8
 - さらに、Scalaには2つの演算子の記法がある。一つはprefix、もう一つはpostfixだ
 - prefix記法は、メソッドを起動するオブジェクトの前にメソッド名を配置する方法で、`-7`の'-'がこれにあたる
 - postfix記法は、オブジェクトの後にメソッド名を配置する方法で、`7 toLong`の'toLong'がこれにあたる
+- 左オペランドと右オペランドという2つのオペランドをとる通常の演算子記法とは対照的に、prefix記法ととpostfix記法は単項である
+- prefix記法ではオペランドは左になる
+- メソッドの定義としては、演算子の前に`unary_`が付く
+- 例えば、`-2.0`は`(2.0).unary_-｀に変換される
+
+```scala
+scala> -2.0
+res0: Double = -2.0
+
+scala> (2.0).unary_-
+res1: Double = -2.0
+```
+
+- prefix記法で使える演算子は`+`, `-`, `!`, `~`だけである
+- 例えばunary_*というメソッドを定義しても、`unary_*`と明記すれば呼び出せるが、`*p`としては呼び出せない
+- postfix記法は、ドットや括弧を付けずに起動する、引数を取らないメソッドである
+- Scalaでは、引数がないメソッドの呼び出しは括弧を省略できる
+- 慣習としては、`println()`のように副作用がある場合は括弧をつけるが、副作用がない場合は括弧をつけない
+
+```scala
+scala> val s = "Hello, world!"
+s: String = Hello, world!
+
+scala> s.toLowerCase
+res2: String = hello, world!
+```
+
+- `toLowerCase`をpostfix記法で呼び出すと以下のようになる
+
+```scala
+scala> s toLowerCase
+warning: there was one feature warning; re-run with -feature for details
+res3: String = hello, world!
+```
+
+- どの基本型にどのような演算子が定義されているかは、Scala API Documentを参照する必要がある
+
+
 
