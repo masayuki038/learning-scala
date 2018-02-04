@@ -349,5 +349,59 @@ res3: String = hello, world!
 
 - どの基本型にどのような演算子が定義されているかは、Scala API Documentを参照する必要がある
 
+# 5.4 Arithmetic operations
 
+- 加算(+)、減算(-)、乗算(*)、除算(/)などの中置演算子表記法で算術メソッドを実行することができる
 
+```scala
+scala> 1.2 + 2.3
+res0: Double = 3.5
+
+scala> 3 - 1
+res1: Int = 2
+
+scala> 'b' - 'a'
+res2: Int = 1
+
+scala> 2L * 3L
+res3: Long = 6
+
+scala> 11 / 4
+res4: Int = 2
+
+scala> 11 % 4
+res5: Int = 3
+
+scala> 11.0f / 4.0f
+res6: Float = 2.75
+
+scala> 11.0 % 4.0
+res7: Double = 3.0
+```
+
+- 左と右の両オペランドがともに積分型(Int, Long, Short, or Char)の場合は、/演算子は余りを覗いた商の整数部を示す
+- %演算子は整数で割った時の余りを示す
+- %で算出する浮動小数の余りはIEEE754標準ではない
+- IEEE754は余りは切り捨てではなく丸めるので、整数の余りの計算は全く違っている
+^ もしIEEE754の余りを求めたい場合は、scala.MathのIEEEremainderを使うことができる
+
+```scala
+scala> Math.IEEEremainder(11.0, 4.0)
+res0: Double = -1.0
+```
+
+- 数値型は-3や+4.0といった正の値や負の値を示す為に、+演算子や-演算子を単項として取ることができる
+- +も-も付けないと、正の値として解釈される
+- +演算子は-演算子の対として存在しているだけで、特別な効果はない
+- -演算子は負の値で使用される
+
+```scala
+scala> val neg = 1 + -3
+neg: Int = -2
+
+scala> val y = +3
+y: Int = 3
+
+scala> -neg
+res1: Int = 2
+```
