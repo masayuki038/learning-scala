@@ -405,3 +405,66 @@ y: Int = 3
 scala> -neg
 res1: Int = 2
 ```
+
+# 5.5 Relational and logical operations
+
+- '>'、'<'、'>=', '<='の演算子は数値型を比較することができる。これらは結果がBooleanで返る
+- 加えて、単項の'!'はBooleanの結果をひっくり返す
+
+```scala
+scala> 1 > 2
+res0: Boolean = false
+
+scala> 1 < 2
+res1: Boolean = true
+
+scala> 1.0 <= 1.0
+res2: Boolean = true
+
+scala> 3.5f >= 3.6f
+res3: Boolean = false
+
+scala> 'a' >= 'A'
+res4: Boolean = true
+
+scala> val thisIsBoring = !true
+thisIsBoring: Boolean = false
+
+scala> !thisIsBoring
+res5: Boolean = true
+```
+
+- 論理演算、論理積(&&)と論理和(||)は中置演算子でBoolean型を取る
+
+```scala
+scala> val toBe = true
+toBe: Boolean = true
+
+scala> val question = toBe || !toBe
+question: Boolean = true
+
+scala> val paradox = toBe && !toBe
+paradox: Boolean = false
+```
+
+- 論理積と論理和の演算はJavaではショートサーキットである
+- これらの演算子を使った式は結果を決定するのに必要なところまでしか評価されない
+- 言い換えると、論理積や論理和の右項は、その左項が結果を決定する場合は評価されない
+
+```scala
+scala> def salt() = { println("salt"); false }
+salt: ()Boolean
+
+scala> def pepper() = { println("pepper"); true }
+pepper: ()Boolean
+
+scala> pepper() && salt()
+pepper
+salt
+res6: Boolean = false
+
+scala> salt() && pepper()
+salt
+res7: Boolean = false
+```
+
