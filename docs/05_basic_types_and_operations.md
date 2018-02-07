@@ -503,3 +503,74 @@ res5: Int = 1
 scala> 1 << 2
 res6: Int = 4
 ```
+
+# 5.7 Object equality
+
+- 2つのオブジェクトが等価であるかを比較するのに`==`を、非等価に`!=`を使うことができる
+
+```scala
+scala> 1 == 2
+res0: Boolean = false
+
+scala> 1 != 2
+res1: Boolean = true
+
+scala> 2 == 2
+res2: Boolean = true
+```
+
+- この操作は基本型だけではなく、すべてのオブジェクトに対して適用できる
+
+```scala
+scala> List(1, 2, 3) == List(1, 2, 3)
+res3: Boolean = true
+
+scala> List(1, 2, 3) == List(4, 5, 6)
+res4: Boolean = false
+```
+
+- さらに、異なる型同士でも比較することができる
+
+```scala
+scala> 1 == 1.0
+res5: Boolean = true
+
+scala> List(1, 2, 3) == "hello"
+res6: Boolean = false
+```
+
+- nullと比較することもできる
+
+```scala
+scala> List(1, 2, 3) == null
+res7: Boolean = false
+
+scala> null == List(1, 2, 3)
+res8: Boolean = false
+```
+
+- ==演算子を作成する際には十分に注意する必要がある
+- これはとてもシンプルなルールになっている
+  - 最初に、左項がnullであるかをチェックする
+  - 左項がnullでなければequalsメソッドを呼び出す
+  - equalsはメソッドなので、比較の精度は左項の型に依る
+  - この自動的なnullチェックがあるおかげで、左項のnullチェックをする必要がない
+- 比較対象の内容が(最終的に？)同じで、equalsメソッドがその内容に基づいて記述されている限り、異なるオブジェクト同士の比較でもtrueになる
+
+```scala
+scala> ("he"+"llo") == "hello"
+res9: Boolean = true
+```
+
+- Scalaの==はJavaと違う
+-- Javaでは、プリミティブ型と参照型の両方で==が使える
+-- Javaのプリミティブ型における==は、Scalaと同様に、値が等価であるか比較する
+-- Javaの参照型における==は、参照先がJavaヒープ上で同じオブジェクトかどうかを比較する
+-- Scalaはこの参照等価の機能をeqという名前で提供している
+- しかしながら、eqとその反対のneは、Javaオブジェクトに直接マッピングしているオブジェクトのみにしか適用できない
+- 詳細は28章で
+
+
+# 単語
+- so long as: …さえすれば、…する限り
+
