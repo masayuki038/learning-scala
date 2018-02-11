@@ -634,3 +634,39 @@ x *= (y + 1)
 - しかし、演算子が式に対してどのように操作するかを明確にする為に括弧をつけるのは良いスタイルである
 - 恐らく、他の言語で遭遇するのは、`*`、`/`、`%`は`+`や`-`よりも優先度が高い、というケースだろう
 - それゆえ、`a + b << c`が括弧無しで想定する結果をもたらす場合でも、明確に`(a + b) << c`と書くことで、あなたの同僚があなたの名前を呼ぶ機会は減るだろう
+
+# 5.9 Rich wrappers
+
+- Scalaの基本型には、これまでのセクションであげてきたメソッド以外にも多くのメソッドがある
+- これらのメソッドはimplicit conversionを使っている
+- 今覚えておいてほしいのは、この章で説明してきたそれぞれの基本型は、いくつかの付加的なメソッドを提供する"rich wrapper"もある、ということだ
+- それゆえ、基本型のすべての利用可能なメソッドは、それぞれの型のrich wrapper側のAPIドキュメントを見るべきだ
+
+|コード|結果|
+|:-----------|:------------|
+|0 max 5|5|
+|0 min 5|0|
+|-2.7 abs|2.7|
+|-2.7 round|-3L|
+|1.5 isInfinity|false|
+|(1.0 / 0) is isInfinity|true|
+|4 to 6|Range(4,5,6)|
+|"bob" capitalize|"Bob"|
+|"robert" drop 2|"bert"|
+
+
+|型|定義|範囲|
+|:-----------|:------------|
+|Byte|scala.runtime.RichByte|
+|Short|	scala.runtime.RichShort|
+|Int|scala.runtime.RichInt|
+|Char|scala.runtime.RichChar|
+|String|scala.runtime.RichString|
+|Float|scala.runtime.RichFloat|
+|Double|scala.runtime.RichDouble|
+|Boolean|scala.runtime.RichBoolean|
+
+# 5.10 Conclusion
+
+- この章の主なポイントは、基本型のメソッド呼び出しとリッチ型のより有用なメソッドである
+- 次の章は、この章で見た演算子のいくつかの新しい実装をする為に、関数型のスタイルでオブジェクトをデザインすることが何を意味するかを示す
