@@ -23,7 +23,7 @@
 - 2つのRationalオブジェクトを加算すると、加算した値を持つ一つのRationalオブジェクトが生成される
 - この章では、Scalaのネイティブな言語サポートであるかのようなライブラリを書くことができるのを垣間見るだろう
 
-# Constructing a Rational
+# 6.2 Constructing a Rational
 
 - Rationalクラスのデザインを始める良い取っ掛かりは、クライアントプログラマにどのようにRationalオブジェクトを作ってもらうかを考えることだ
 - Rationalオブジェクトはimmutableにすることにしたので、インスタンス生成時に、クライアントがインスタンスのすべてのデータを要求する
@@ -51,6 +51,38 @@ class Rational(n: Int, d: Int) {
 
 - このコードにより、printlnの呼び出しはRationalのプライマリコンストラクタに配置する
 - それゆえ、printlnの呼び出しは、Rationalインスタンスを構築する際にデバッグメッセージを出力する
+
+# 6.3 Reimplementing the toString method
+
+- 先の例で、Rationalオブジェクトを作成した時、"Rational@90110a"と表示された
+- インタープリタはRationalオブジェクトのtoStringメソッドを呼び出した際、幾分奇妙な文字列を取得した
+- デフォルトでは、Rationalクラスは、クラス名と@記号、そして16進数を出力するjava.lang.ObjectのtoStringの実装を継承している
+- toStringの結果は、基本的にはデバッグやログメッセージ、テスト失敗のレポート、デバッガやインタープリタのアウトプットで使用可能な情報をプロジェクトに提供することを意図している
+- toStringによって提供されるこの結果は、特別参考にならない、なぜなら、有理数の値について手がかりを提供しない為である
+- より効果的なtoStringの実装は、有理数の分子と分母を表示することである
+- RationalクラスのtoStringメソッドをオーバーライドすることができる
+
+```scala
+class Rational(n: Int, d: Int) {
+  override def toString = n + "/" + d
+}
+```
+
+- 先頭のoverride識別子は以前定義されたメソッド定義を上書きする、というシグナルである
+- 有理数の表示が良くなったので、Rationalクラスに記述していたデバッグ出力のステートメントを削除した
+
+```scala
+scala> class Rational(n: Int, d: Int) {
+     | override def toString = n +"/"+ d
+     | }
+defined class Rational
+
+scala> val x = new Rational(1, 3)
+x: Rational = 1/3
+
+scala> val y = new Rational(5, 7)
+y: Rational = 5/7
+```
 
 # 単語
 - emphasis
@@ -81,3 +113,6 @@ class Rational(n: Int, d: Int) {
     - 実体がある
     - 十分な
     - 相当な
+- clue
+    - 手がかり
+    - 糸口
