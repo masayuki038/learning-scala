@@ -84,6 +84,40 @@ scala> val y = new Rational(5, 7)
 y: Rational = 5/7
 ```
 
+# 6.4 Checking preconditions
+
+- 次のステップとして、プライマリコンストラクタの現状の振る舞いの問題に注目する
+- この章の最初に述べたように、有理数は分母に0を取ることはない
+- しかしながら、現在、プライマリコンストラクタはdの値に対して0を渡すことができる
+
+```scala
+scala> class Rational(n: Int, d: Int) {
+     | override def toString = n +"/"+ d
+     | }
+defined class Rational
+
+scala> new Rational(5, 0)
+res0: Rational = 5/0
+```
+
+- オブジェクト指向プログラミングの恩恵の一つは、オブジェクトの内側にデータを閉じ込めることができる。なので、データが一貫して正しいことを確認することができる
+- Rationalのようなimmutableオブジェクトのケースでは、これはオブジェクトが構築された時にデータが正しいことを確認するべきであることを意味する
+- 分母に0を与えるということは、有理数としては不正なので、dに0が与えられた時は、Rationalを構築されるようにするべきではない
+- この問題のベストな対応は、dが0以外の数値となるかどうか事前確認を入れることである
+- この事前確認は、メソッドやコンストラクタに与えられた値に対する、呼び出し側がすべて満たすべき制約となる
+
+```scala
+scala> class Rational(n: Int, d: Int) {
+     | require(d != 0)
+     | override def toString = n +"/"+ d
+     | }
+defined class Rational
+```
+
+- requireメソッドは1つのbooleanパラメータを取る
+- trueを与えると、普通に制御が戻る
+- それ以外は、IllegalArgumentExceptionをスローしてオブジェクトの構築を止める
+
 # 単語
 - emphasis
     - 重点
