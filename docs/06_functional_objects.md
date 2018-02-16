@@ -118,6 +118,81 @@ defined class Rational
 - trueを与えると、普通に制御が戻る
 - それ以外は、IllegalArgumentExceptionをスローしてオブジェクトの構築を止める
 
+# 6.5 Adding fields
+
+- プライマリコンストラクタは事前条件を適切に強制するようになったので、その先の事項に目を向ける
+- その為には、Rationalをパラメータとして取るaddという名のpublicメソッドをRationalクラスに定義する
+- Rationalをimmutableに保つ為には、addメソッドはそのレシーバに値を加算してはならない
+- 加算結果を持った新しいRationalオブジェクトを作成して返すべきだ
+
+```scala
+class Rational(n: Int, d: Int) { // This won't compile
+  required(d != 0)
+  override def toString = n + "/" + d
+  def add(that: Rational): Rational = new Rational(n * that.d + that.n * d, d * that.d)
+}
+```
+
+- しかし、これはコンパイルが失敗する
+
+```
+<console>:11: error: not found: value required
+       required(d != 0)
+       ^
+<console>:13: error: value d is not a member of Rational
+       def add(that: Rational): Rational = new Rational(n * that.d + that.n * d,
+ d * that.d)
+                                                                 ^
+<console>:13: error: value n is not a member of Rational
+       def add(that: Rational): Rational = new Rational(n * that.d + that.n * d,
+ d * that.d)
+                                                                          ^
+<console>:13: error: value d is not a member of Rational
+       def add(that: Rational): Rational = new Rational(n * that.d + that.n * d,
+ d * that.d)
+ ```
+
+- クラスパラメータ、nとdは、addメソッドのコードのスコープ内にあるけれでも、この値にアクセスできるのはaddメソッドを起動したオブジェクトのものだけである
+- 結果として、addの実装でnやdに関しては、コンパイラはこれらのクラスパラメータの為の値を提供すると幸せになる
+- しかし、that.nやthat.dと指定することはできない。なぜなら、それはaddを起動したRationalオブジェクトを参照しないので
+- 分子と分母の値を参照する為には、それらをフィールドにする必要がある
+
+```scala
+class Rational(n: Int, d: Int) {
+  require(d != 0)
+  val numer: Int = n
+  val denom: Int = d
+  override def toString = numer + "/" + denom
+  def add(that: Rational): Rational = new Rational(numer * that.denom + that.numer * denom, denom * that.denom)
+}
+```
+
+```scala
+scala> val oneHalf = new Rational(1, 2)
+oneHalf: Rational = 1/2
+
+scala> val twoThirds = new Rational(2, 3)
+twoThirds: Rational = 2/3
+
+scala> oneHalf add twoThirds
+res0: Rational = 7/6
+```
+
+- もう一つの事項として、以前オブジェクトの外からアクセスできなかった分子や分母にアクセスすることができるようになった
+
+```scala
+scala> val r = new Rational(1, 2)
+r: Rational = 1/2
+
+scala> r.numer
+res1: Int = 1
+
+scala> r.denom
+res2: Int = 2
+```
+
+```
+
 # 単語
 - emphasis
     - 重点
@@ -150,3 +225,7 @@ defined class Rational
 - clue
     - 手がかり
     - 糸口
+- properly
+    - 適当に
+    - 正しく
+    - きちんと
