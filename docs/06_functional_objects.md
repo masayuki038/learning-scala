@@ -191,41 +191,24 @@ scala> r.denom
 res2: Int = 2
 ```
 
+# 6.6 Self references
+
+- `this`というキーワードは、現在実行中のメソッドが呼び出されたオブジェクトインスタンスへの参照である
+- あるいは、コンストラクタの中で使われている場合は、構築されたオブジェクトインスタンスへの参照である
+
+```scala
+def lessThan(that: Rational) =
+  this.numer * that.denom < that.numer * this.denom
 ```
 
-# 単語
-- emphasis
-    - 重点
-    - 強調
-    - 語勢
-- rational
-    - 理性的な
-    - 合理的な
-    - 冷静な
-- rational number
-    - 有理数
-- approximation
-    - 近似値
-- numerator
-    - 分子
-- denominator
-    - 分母
-- fraction
-    - 破片
-    - 分数
-    - 端数
-- observation
-    - 注目
-    - 観察
-    - 所見、見解
-- substantial
-    - 実体がある
-    - 十分な
-    - 相当な
-- clue
-    - 手がかり
-    - 糸口
-- properly
-    - 適当に
-    - 正しく
-    - きちんと
+- ここでは、`this.numer`は`lessThan`が呼び出されたオブジェクトの分子を参照する
+- プレフィックスを省略して`numer`と書くこともできる。2つの記法は同じ意味である
+- `this`の省略をできない例として、Rationalクラスに、指定された有理数と引数で大きい方を返すmaxというメソッドを追加してみる
+
+```scala
+def max(that: Rational) =
+  if (this.lessThan(that)) that else this
+```
+
+- ここでは、最初の`this`は冗長である
+- しかし条件文がfalseを返した時に返す2つ目の`this`は省略することができない
