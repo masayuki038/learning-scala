@@ -212,3 +212,47 @@ def max(that: Rational) =
 
 - ここでは、最初の`this`は冗長である
 - しかし条件文がfalseを返した時に返す2つ目の`this`は省略することができない
+
+# 6.7 Auxiliary constructors
+
+- クラスに複数のコンストラクタが必要な場合がある
+- Scalaでは、プライマリコンストラクタ以外のコンストラクタを「補助コンストラクタ」と呼ぶ
+- 例えば、分母が1の有理数は単に分子だけを書くことによって簡潔にできる
+- `new Rational(5, 1)`と書く代わりに、単に`new Rational(5)`と書くことができる
+- これは、分母が1の時に分子だけを取る補助コンストラクタの追加が必要になる
+
+```scala
+class Rational(n: Int, d: Int) {
+  require(d != 0)
+
+  val numer: Int = n
+  val denom: Int = d
+
+  def this(n: Int) = this(n, 1) // auxiliary constructor
+
+  override def toString = numer + "/" + denom
+
+  def add(that: Rational): Rational =
+    new Rational(
+      numer * that.denom + that.numer * denom, denom * that.denom
+    )
+}
+```
+
+- Scalaでは補助コンストラクタは`this(...)`から始まる
+- 補助コンストラクタの中身は、分子にその引数を、そして分母に1を指定し、プライマリコンストラクタを呼び出すだけである
+
+```
+scala> val y = new Rational(3)
+y: Rational = 3/1
+```
+
+- Scalaでは、すべての補助コンストラクタはまず同じクラスの別のコンストラクタを呼び出すことになる
+- 言い換えると、すべての補助クラスの最初のステートメントは`this(...)`となる
+- 呼び出されたコンストラクタはプライマリコンストラクタか、あるいは呼び出し側のコンストラクタの前に提供されるもう一つの補助コンストラクタとなる
+- このルールのネット効果は、Scalaにおけるすべてのコンストラクタの呼び出しは、最終的にプライマリコンストラクタの呼び出しになる
+- それゆえ、プライマリコンストラクタはそのクラスの単一のエントリポイントとなる
+- Note: Javaでは同じクラスの別のコンストラクタを呼び出すかsuperのコンストラクタを呼び出すが、Scalaではsuperのコンストラクタはプライマリコンストラクタだけが呼び出す
+- Scalaにおけるその追加の制限は、Javaと比べてScalaのコンストラクタの短さと簡潔さを増大させる設計のトレードオフである
+
+
