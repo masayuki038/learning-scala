@@ -255,4 +255,48 @@ y: Rational = 3/1
 - Note: Javaでは同じクラスの別のコンストラクタを呼び出すかsuperのコンストラクタを呼び出すが、Scalaではsuperのコンストラクタはプライマリコンストラクタだけが呼び出す
 - Scalaにおけるその追加の制限は、Javaと比べてScalaのコンストラクタの短さと簡潔さを増大させる設計のトレードオフである
 
+# 6.8 Private fields and methods
 
+- 前のバージョンのRationalでは、分子nと分母dで単純に初期化した
+- 結果として、Rationalの分子と分母は必要以上に大きくなることがある
+- 例えば、66/42という分数は、正規化することで11/7にすることができる
+- しかし、プライマリコンストラクタでは現在これを行っていない
+- 正規化する為には、分子と分母の最大公約数で除算する必要がある
+- 例えば、66と42の最大公約数は6である。66/42の分子と分母をそれぞれ6で除算すると、11/7になる
+
+```scala
+class Rational(n: Int, d: Int) {
+  require(d != 0)
+  private val g = gcd(n.abs, d.abs)
+  val numer = n / g
+  val denom = d / g
+
+  def this(n: Int) = this(n, 1)
+
+  def add(that: Rational): Rational =
+    new Rational(numer * that.denom + that.numer * denom, denom * that.denom)
+
+  override def toString = numer + "/" + denom
+
+  private def gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
+}
+```
+
+- このバージョンのRationalは、`g`というprivateフィールドと、numerとdenomの初期化を変更した
+- `g`はprivateなので、クラスの内部からのみアクセス可能である
+- 渡された2つのIntから最大公約数を求める`gcd`というメソッドも追加した
+- privateなヘルパーメソッド`gcd`を追加した目的は、クラスの他の部分(この場合はプライマリコンストラクタ)で必要とされるコードを外に出した
+- `gcd`に渡す`n`と`d`は絶対値なので、gは常に正の値であることを確認する
+- Scalaコンパイラは、プライマリコンストラクタにて、ソースコードに現れた順で3つのフィールドを追加する書初期化コードを配置する
+- `g`の初期化(`gcd(n.abs, d.abs)`)は、ソースの先頭に記載されているので、他の2つよりも前に実行される
+- フィールド`g`は、結果として、`n`と`d`のそれぞれの絶対値から求められた最大公約数で初期化される
+- それから、フィールド`g`はnumerやdenomの初期化で使われる
+- nとdを最大公約数で除算することにより、Rationalは正規化されて構築される
+
+```scala
+scala> new Rational(66, 42)
+res0: Rational = 11/7
+```
+
+# 単語
+- factor out: 追い出す
