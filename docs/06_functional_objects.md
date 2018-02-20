@@ -298,5 +298,87 @@ scala> new Rational(66, 42)
 res0: Rational = 11/7
 ```
 
+# 6.9 Defining operators
+
+- Rationalクラスに加算のメソッドを追加したが、より便利に使いたい
+
+```scala
+x + y
+```
+
+- もしxとyが整数や浮動小数だったとしても、以下のように書く必要がある
+
+```scala
+x.add(y)
+```
+
+- あるいは、少なくても以下のように
+
+```scala
+x add y
+```
+
+- もしそれらが有理数であればどうか
+- そうするべきだという確証はない
+- 有理数は他と同様に数値である
+- 数学的には、有理数は浮動小数よりむしろ自然である
+- なぜ普通の演算子を作るべきではないのか？Scalaはこれができる
+- この最初のステップは、加算を演算子を使う形に置き換えることだ
+- 率直に考えて、Scalaでは`+`が適切な演算子になる
+- シンプルに`+`という名前のメソッドを定義する
+- 同じように積算する`*`を実装することもできる
+
+```scala
+object Rational {
+  def main(args: Array[String]) = {
+    val x = new Rational(1, 2)
+    val y = new Rational(2, 3)
+    println("x + y: " + (x + y))
+    println("x.+(y): " + x.+(y))
+    println("x + x * y: " + (x + x * y))
+    println("(x + x) * y: " + ((x + x) * y))
+    println("x + (x * y): " + (x + (x * y)))
+  }
+}
+
+class Rational(n: Int, d: Int) {
+
+  require(d != 0)
+
+  private val g = gcd(n.abs, d.abs)
+  val numer = n / g
+  val denom = d / g
+
+  def this(n: Int) = this(n, 1)
+
+  def + (that: Rational): Rational =
+    new Rational(
+      numer * that.denom + that.numer * denom,
+      denom * that.denom
+    )
+
+  def * (that: Rational): Rational =
+    new Rational(numer * that.numer, denom * that.denom)
+
+  override def toString = numer +"/"+ denom
+
+  private def gcd(a: Int, b: Int): Int =
+    if (b == 0) a else gcd(b, a % b)
+}
+```
+
+- その他に覚えておく点として、演算子の優先順位がある
+- `*`演算子は`+`よりも結合が強い
+- 言い換えると、Rationalの`+`と`*`の演算子は期待どおり動くだろう
+- 例えば、`x + x * y`は`(x + x) * y`ではなく、`x + (x * y)`として実行される
+
+```scala
+x + y: 7/6
+x.+(y): 7/6
+x + x * y: 5/6
+(x + x) * y: 2/3
+x + (x * y): 5/6
+```
+
 # 単語
 - factor out: 追い出す
