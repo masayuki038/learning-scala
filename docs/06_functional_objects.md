@@ -435,10 +435,83 @@ x + (x * y): 5/6
 - 典型的なユースケースはは、Javaのスレッドクラスの静的なyieldメソッドにアクセスすることである
 - Scalaでは`yield`が予約語なので、`Thread.yield()`と書くことはできないが、Thread.``yield``()と書くことはできる
 
-# 単語
-- factor out: 追い出す
-- depart: 出発する、起動から逸れる、規制から逸脱する
-- diameter: 直径
-- circumference: 直径
-- mangle: ずたずたにする、台無しにする、しわ伸ばし機
-- arbitrarily: 任意に、気ままに、独断的に
+# 6.11 Method overloading
+
+- Rationalクラスに戻ると、加算と積算は実装したものの、まだ混合演算はない
+- 例えば、Rationalと整数の積算はでいない。何故なら、`*`演算子は有理数(Rational)を取るようになっているからだ
+- 故に、`r * 2`と書くことができない。`r * new Rational(2)`と書かなければならない
+- Rationalクラスをより便利にする為に、有理数と整数の間で加算・積算ができるようにメソッドを追加する
+- 加えて減算・除算のメソッドも追加する
+
+```scala
+package net.wrap_trap.learning_scala.chapter6
+
+object Rational {
+  def main(args: Array[String]) = {
+    val x =  new Rational(2, 3)
+    println("x = " + x)
+    println("x * x = " + x * x)
+    println("x * 2 = " + x * 2)
+  }
+}
+
+class Rational(n: Int, d: Int) {
+
+  require(d != 0)
+
+  private val g = gcd(n.abs, d.abs)
+  val numer = n / g
+  val denom = d / g
+
+  def this(n: Int ) = this(n, 1)
+
+  def + (that: Rational): Rational =
+    new Rational(
+      numer * that.denom + that.numer * denom,
+      denom * that.denom
+    )
+
+  def + (i: Int): Rational =
+    new Rational(numer + i * denom, denom)
+
+  def - (that: Rational) =
+    new Rational(
+      numer * that.denom - that.numer * denom, denom * that.denom
+    )
+
+  def - (i: Int): Rational =
+    new Rational(numer - i * denom, denom)
+
+  def * (that: Rational): Rational =
+    new Rational(numer * that.numer, denom * that.denom)
+
+  def * (i: Int) =
+    new Rational(numer * i, denom)
+
+  def / (that: Rational): Rational =
+    new Rational(numer * that.denom, denom * that.numer)
+
+  def / (i: Int): Rational =
+    new Rational(numer, denom * i)
+
+  override def toString = numer + "/" + denom
+
+  private def gcd(a: Int, b: Int): Int =
+    if (b == 0) a else gcd(b, a % b)
+}
+```
+
+- それぞれの演算子に2つのバージョンがある
+- ひとつは有理数を取るもの、もうひとつは整数を取るものである
+- それぞれの名前は複数回使われているので、これらのメソッドの名前はオーバーロードされている
+- 例えば、`+`は有理数をとるものと整数をとるものがある
+- メソッド呼び出し時に、コンパイラはオーバーロードされたメソッドの中から引数の型が合致するものを選ぶ
+- 例えば、`x.+(y)`という式でyがRationalオブジェクトであれば、コンパイラが`+`でRationalオブジェクトをとるメソッドを選択する
+- yが整数であれば、コンパイラは`+`で整数をとるメソッドを選択する
+
+```
+x = 2/3
+x * x = 4/9
+x * 2 = 4/3
+```
+
