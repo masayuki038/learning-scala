@@ -1,4 +1,4 @@
-package net.wrap_trap.learning_scala.chapter6
+package net.wrap_trap.learning_scala.chapter6.section11
 
 object Rational {
   def main(args: Array[String]) = {

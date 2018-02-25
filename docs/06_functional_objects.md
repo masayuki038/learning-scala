@@ -515,3 +515,56 @@ x * x = 4/9
 x * 2 = 4/3
 ```
 
+# 6.12 Implicit conversions
+
+- `r * 2`のオペランドを交換したい場合、`2 * r`となるが、うまく動かない
+
+```scala
+Error:(9, 28) overloaded method value * with alternatives:
+  (x: Double)Double <and>
+  (x: Float)Float <and>
+  (x: Long)Long <and>
+  (x: Int)Int <and>
+  (x: Char)Int <and>
+  (x: Short)Int <and>
+  (x: Byte)Int
+ cannot be applied to (net.wrap_trap.learning_scala.chapter6.section12.Rational)
+    println("x * 2 = " + 2 * x)
+                           ^                             ^
+```
+
+- 問題は、`2 * r`は`2.*(r)`と等しく、"2"、つまりIntのメソッド呼び出しとなる
+- しかし、IntはRationalオブジェクトを引数にとる積算のメソッドを持っていない
+- しかしならが、Scalaではこの問題を解決する為に別の方法がある
+- 必要な時にIntをRationalに変換するimplicit conversionを作成することができる
+
+```scala
+object Rational {
+  implicit def intToRational(x: Int) = new Rational(x)
+
+  def main(args: Array[String]) = {
+    val r =  new Rational(2, 3)
+    println("r = " + r)
+    println("2 * r = " + 2 * r)
+  }
+}
+```
+
+- これは、IntからRationalへの変換を定義する
+- 先頭に付いているimplicit修飾子は、自動的に適用することをコンパイラに教える
+- その変換が定義し、前回失敗した例をリトライする
+
+```
+r = 2/3
+2 * r = 4/3
+```
+
+- このimplicit conversionが動く為には、スコープ内である必要がある
+- Rationalクラスの中にこの定義を置くと、objectのスコープには適用されないので、objectで直接定義する必要がある
+- この例を一見すると、implicit conversionはライブラリに柔軟性と使いやすさをもたらす、とてもパワフルなテクニックである
+- 確かにパワフルだが、誤用しやすい
+- 12章では、必要になった時にスコープに設定する方法を含め、implicit conversionの理解を深める
+
+# 単語
+
+- misuse: 誤用する、悪用する、酷使する
