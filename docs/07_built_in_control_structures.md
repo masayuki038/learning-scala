@@ -64,6 +64,57 @@ println(if (!args.isEmpty) args(0) else "default.txt")
 - もう一方の方法で書くことができる
 - valを使うことは、時間とともにコードが改善されていくように安全にリファクタリングできるようにする
 
+# 7.2 While loops
+
+- Scalaの`while`は他の言語と同様に、条件とボディがあり、条件結果が`true`の間はボディを何度も実行する
+
+```scala
+    def gcdLoop(x: Long, y: Long): Long = {
+      var a = x
+      var b = y
+      while (a != 0) {
+        val temp = a
+        a = b % a
+        b = temp
+      }
+      b
+    }
+```
+
+- Scalaは`do-while`もある。これはボディを実行した前ではなく後に条件をテストする
+
+```scala
+    var line = ""
+    do {
+      line = readLine()
+      println("Read: "+ line)
+    } while (line != "")
+```
+
+- `while`と`do-while`は"loops"と呼ばれる構文で、式ではない、なぜなら、それらは値を返さない
+- 結果の型は`Unit`となる
+- `Unit`という型を持つ値が存在していることがわかる
+- それは`unit value`と呼ばれ、`()`と記述される
+- `()`の存在は、Javaの`void`とは異なる
+
+```scala
+  scala> def greet() { println("hi") }
+  greet: ()Unit
+
+  scala> greet() == ()
+  hi
+  res0: Boolean = true
+```
+
+- ボディの前に`=`が無いので、`greet`は`Unit`の結果を産み出す
+- それゆえ、`greet`は`()`というunitの値を返す
+- それは次の行で、`greet`の結果と`()`を比較して`true`が返ってきていることで確かめることができる
+
+
+
+
+
+
 # 単語
 
 - handful: 一握り、少量、少数
@@ -71,3 +122,6 @@ println(if (!args.isEmpty) args(0) else "default.txt")
 - after another: 相次ぎ
 - accumulate: 蓄積する、積もる、堆積する
 - sufficient: 十分な、足りる
+- turn out: 結果的に～であることがわかる、～という状態で終わる、～になる
+- construct: 構文
+
