@@ -109,11 +109,33 @@ println(if (!args.isEmpty) args(0) else "default.txt")
 - ボディの前に`=`が無いので、`greet`は`Unit`の結果を産み出す
 - それゆえ、`greet`は`()`というunitの値を返す
 - それは次の行で、`greet`の結果と`()`を比較して`true`が返ってきていることで確かめることができる
+- これに関連して、unitの値の結果を返すもう一つの別の構文は、varに再代入することだ
+- 例えば、一行ずつ読んでいくような以下のコードをJavaから持ってきてScalaで書いたとする
 
+```scala
+  var line = ""
+  while ((line = readLine()) != "") // This doesn't work!
+    println("Read: "+ line)
+```
 
+- このコードをコンパイルすると、ScalaはunitとStringを`!=`で比較すると常にtrueが返る、というワーニングを出す
+- Javaでは標準入力からの一行をlineに代入するが、Scalaでは代入は常ににtrueを返す
+- それゆえ、`line = readLine()`は常にtrueを返し、""になることはない
+- 結果として、無限ループになってしまう
+- while loopは結果を返さないので、純粋な関数言語ではしばしば除外される
+- それらの言語はloopではなく式を持つ
+- Scalaはそれでもwhile loopを持っている、なぜなら、特に命令形プログラミングをやってきたプログラマにとって、命令形はより読みやすい
+- 再帰を使わずwhile loopで表現することにより、読みやすくなる
+- 例えば、gcdメソッドは以下のように再帰を用いて記述することで、varが不要になる
 
+```scala
+    def gcd(x: Long, y: Long): Long =
+      if (y == 0) x else gcd(y, x % y)
+```
 
-
+- 一般的には、varと同じ方法で、コード中のwhile loopにも同じように挑戦することをオススメする
+- 実際、while loopとvarは密接な関係になることが多い
+- while loopは値を返さないので、通常はvarを更新したりI/Oまわりの処理を行う
 
 # 単語
 
@@ -124,4 +146,5 @@ println(if (!args.isEmpty) args(0) else "default.txt")
 - sufficient: 十分な、足りる
 - turn out: 結果的に～であることがわかる、～という状態で終わる、～になる
 - construct: 構文
-
+- relevant: 関係のある、現実の問題に直結する
+- nonetheless: それにもかかわらず
