@@ -137,6 +137,59 @@ println(if (!args.isEmpty) args(0) else "default.txt")
 - 実際、while loopとvarは密接な関係になることが多い
 - while loopは値を返さないので、通常はvarを更新したりI/Oまわりの処理を行う
 
+# 7.3 For expressions
+
+- Scalaの`for`は、イテレーションの幅広いバリエーションを表現する為に、いくつかのシンプルな構成要素を異なる方法で結びつける
+- シンプルな利用は連続した整数をイテレーションするような一般的なタスクを可能にする
+- より進んだ式は複数種の異なったコレクションにまたがってイテレーションできたり、任意の条件に基づいた要素をフィルタしたり、新しいコレクションを生成する
+
+## Iteration through collections
+
+- `for`ができるもっともシンプルなことは、コレクションのすべての要素を走査することだ
+- 以下の例はカレントディレクトリのすべてのファイルを出力するコードである
+
+```scala
+    val filesHere = (new java.io.File(".")).listFiles
+
+    for (file <- filesHere)
+      println(file)
+```
+
+- `file <- filesHere`の部分はジェネレータと呼ばれ、`filesHere`の要素を走査する
+- それぞれのイテレーションでは、`file`という新しいval変数が要素の値で初期化される
+- その`for`式の文法は、配列でなくてもどんなコレクションでも動く
+- とても便利な例は、以下のようなRange型のものだ
+
+```
+  scala> for (i <- 1 to 4)
+          println("Iteration "+ i)
+  Iteration 1
+  Iteration 2
+  Iteration 3
+  Iteration 4
+```
+
+- もし上限値の「4」を含みたくない場合は、以下のように`until`を使う
+
+```
+  scala> for (i <- 1 until 4)
+          println("Iteration "+ i)
+  Iteration 1
+  Iteration 2
+  Iteration 3
+```
+
+- このように整数の配列を走査する場合、以下のように配列を走査するを使うだろう
+
+```scala
+  // Not common in Scala...
+  for (i <- 0 to filesHere.length - 1)
+    println(filesHere(i))
+```
+
+- Scalaでこの手の方法が一般的ではないのは、Scalaはコレクションを直接走査できるからである
+- もしそうすると、コードは短くなり、配列を走査するする際に発生する可能性のある、off-by-oneエラー(境界条件の判定に関するエラー)を回避することができる
+
 # 単語
 
 - handful: 一握り、少量、少数
@@ -148,3 +201,6 @@ println(if (!args.isEmpty) args(0) else "default.txt")
 - construct: 構文
 - relevant: 関係のある、現実の問題に直結する
 - nonetheless: それにもかかわらず
+- ingredient: 構成要素、成分、原料
+- combine: ～を混ぜ合わせる、～を結び付ける、兼ね備える
+- arbitrary: 気まぐれな、任意の、偶然による
