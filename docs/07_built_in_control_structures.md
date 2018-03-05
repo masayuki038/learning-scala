@@ -190,6 +190,43 @@ println(if (!args.isEmpty) args(0) else "default.txt")
 - Scalaでこの手の方法が一般的ではないのは、Scalaはコレクションを直接走査できるからである
 - もしそうすると、コードは短くなり、配列を走査するする際に発生する可能性のある、off-by-oneエラー(境界条件の判定に関するエラー)を回避することができる
 
+## Filtering
+
+- コレクション全体をイテレーションしたくない時、コレクションをフィルタすることができる
+- 括弧内に`if`文を入れたfilterを追加したfor文で実現できる
+- 例えば、カレントディレクトリの".scala"という拡張子を持つファイルのみを対象にする場合は以下のようになる
+
+```scala
+    val filesHere = (new java.io.File(".")).listFiles
+
+    for (file <- filesHere if file.getName.endsWith(".scala"))
+      println(file)
+```
+
+- 以下のコードでも、前記のコードと同じ結果になる
+
+```scala
+  for (file <- filesHere)
+    if (file.getName.endsWith(".scala"))
+      println(file)
+```
+
+- このコードでも、前記のコードと同じ結果になるが、命令プログラミングに馴染んだプログラマにとってはより親しみがあるコードになる
+- しかしながら、この命令型の形は、1つのオプションでしかない、なぜなら、この特殊な`for`は副作用のある出力を実行し、unitの値()を返す
+- このセクションの後段で説明するが、`for`式は値、`<- clauses`によって決められる型を持つコレクションを返すので、「式」と呼ばれる
+- `if`を増やすことによって、フィルタを増やすことができる
+- 例えば、ディレクトリではなくファイルのみを出力したい場合は以下のようになる
+
+```
+    for (
+      file <- filesHere
+      if file.isFile;
+      if file.getName.endsWith(".scala")
+    ) println(file)
+```
+
+
+
 # 単語
 
 - handful: 一握り、少量、少数
@@ -204,3 +241,4 @@ println(if (!args.isEmpty) args(0) else "default.txt")
 - ingredient: 構成要素、成分、原料
 - combine: ～を混ぜ合わせる、～を結び付ける、兼ね備える
 - arbitrary: 気まぐれな、任意の、偶然による
+- entirety: 完全であること、全部、全体
