@@ -225,7 +225,29 @@ println(if (!args.isEmpty) args(0) else "default.txt")
     ) println(file)
 ```
 
+## Nested iteration
 
+- 複数の`<-`を設定すると、ネストしたループになる
+- 例えば、以下の例は2つのネストしたループになっている
+- 外側のイテレーションは".scala"で終わる`filesHere`で、内側のイテレーションは`fileLines`となる。
+
+```scala
+    def fileLines(file: java.io.File) =
+      scala.io.Source.fromFile(file).getLines.toList
+
+    def grep(pattern: String) =
+      for (
+        file <- filesHere
+        if file.getName.endsWith(".scala");
+        line <- fileLines(file)
+        if line.trim.matches(pattern)
+      ) println(file +": "+ line.trim)
+
+    grep(".*gcd.*")
+```
+
+- お好みで、ジェネレータやフィルタの周りを丸括弧で囲む変わりにカーリー括弧を使うことができる
+- カーリー括弧を使う一つの利点は、丸括弧を使った時に必要なセミコロンを省略することができる
 
 # 単語
 
