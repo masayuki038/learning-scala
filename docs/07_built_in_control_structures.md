@@ -249,6 +249,30 @@ println(if (!args.isEmpty) args(0) else "default.txt")
 - お好みで、ジェネレータやフィルタの周りを丸括弧で囲む変わりにカーリー括弧を使うことができる
 - カーリー括弧を使う一つの利点は、丸括弧を使った時に必要なセミコロンを省略することができる
 
+# Mid-stream variable bindings
+
+- 前のコードは、`line.trim`を繰り返し実行している
+- これは全体的な処理なので、一度だけ処理するようにしたい
+- これは等号(=)を使って新しい変数に結果をバインドすることによって可能である
+- 新しく導入した変数は`val`のように扱われる
+
+```scala
+    def grep(pattern: String) =
+      for {
+        file <- filesHere
+        if file.getName.endsWith(".scala")
+        line <- fileLines(file)
+        trimmed = line.trim
+        if trimmed.matches(pattern)
+      } println(file +": "+ trimmed)
+
+    grep(".*gcd.*")
+```
+
+- 上記コードでは、`trimmed`が`for`式の途中で導入されている
+- その変数は`line.trim`の結果で初期化されている
+- それから`for`式の残りは2箇所で新しい変数を使う、一つは`if`のところで、もう一つは`println`の中で
+
 # 単語
 
 - handful: 一握り、少量、少数
