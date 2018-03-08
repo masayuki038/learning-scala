@@ -273,6 +273,45 @@ println(if (!args.isEmpty) args(0) else "default.txt")
 - その変数は`line.trim`の結果で初期化されている
 - それから`for`式の残りは2箇所で新しい変数を使う、一つは`if`のところで、もう一つは`println`の中で
 
+## Producing a new collection
+
+- これまでの例では、値をイテレートさせて、それらを捨てていた
+- それぞれのイテレーションで後段で使う値を生成することもできる
+- そうする為に、`yield`というキーワードを式のボディの前に配置することができる
+- 例えば、これは.scalaファイルを識別して配列に入れる関数である
+
+```scala
+  def scalaFiles =
+    for {
+      file <- filesHere
+      if file.getName.endsWith(".scala")
+    } yield file
+```
+
+- 式のボディは都度都度一つの値を生成する、このケースでは単にファイルである
+- 式の実行が完了すると、結果は一つのコレクションに生成した値がすべて含まれる
+- この結果のコレクションの型はイテレーション節で処理されるコレクションの型に基づく
+- このケースでは、`filesHere`が配列で、生成された型はファイルなので、結果はArray[File]となる
+- `yield`の配置場所には注意する必要がある。文法としては`for clauses yield body`となる
+- このyieldはボディの前に置く必要がある
+- もしボディがカーリー括弧に囲まれているようなら、`yield`は最初のカーリー括弧の前に配置する必要がある
+- 例えば、以下の例では、最初はカレントディレクトリの全ての.scalaファイルを`filesHere`という名前のArray[File]に変換する
+- これらの各々は`Iterator[String]`を生成する
+- この最初のイテレータは、トリムされ、行中に`for`がある行のみを内包するもう一つのIterator[String]に変換する
+- 最終的に、それぞれで行の長さを生成する
+- この式の結果は、それぞれの行の長さが格納されたArray[Int]となる
+
+```
+    val forLineLengths =
+      for {
+        file <- filesHere
+        if file.getName.endsWith(".scala")
+        line <- fileLines(file)
+        trimmed = line.trim
+        if trimmed.matches(".*for.*")
+      } yield trimmed.length
+```
+
 # 単語
 
 - handful: 一握り、少量、少数
