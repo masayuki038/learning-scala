@@ -369,7 +369,7 @@ println(if (!args.isEmpty) args(0) else "default.txt")
 - この例では、例外の型がFileNotFoundExceptionの場合、最初の節が実行される
 - 例外の型がIOExceptionの場合、二番目の節が実行される
 - 例外の型がどれにも該当しない場合は、try-catchは終了してより上位に伝播する
-- Note: Javaと違って、Scalaは宣言例外がない
+- Note: Javaと違って、Scalaには宣言例外がない
 - 例外を宣言したい場合は、`@throw`アノテーションをつける
 
 # 単語
