@@ -345,6 +345,33 @@ println(if (!args.isEmpty) args(0) else "default.txt")
 - すべての`if`式の型は計算する側の型となる
 - Nothing型については後程11.3章で説明する
 
+## Catching exceptions
+
+- 以下のようなコードで例外をキャッチすることができる
+- catch節はパターンマッチングで一致したものが選ばれる
+
+```scala
+    import java.io.FileReader
+    import java.io.FileNotFoundException
+    import java.io.IOException
+
+    try {
+      val f = new FileReader("input.txt")
+      // Use and close file
+    } catch {
+      case ex: FileNotFoundException => // Handle missing file
+      case ex: IOException => // Handle other I/O error
+    }
+```
+
+- try-catch式の振る舞いは他の言語と同じである
+- ボディを実行して、もし例外をスローすると、各々のcatch節が次々に試される
+- この例では、例外の型がFileNotFoundExceptionの場合、最初の節が実行される
+- 例外の型がIOExceptionの場合、二番目の節が実行される
+- 例外の型がどれにも該当しない場合は、try-catchは終了してより上位に伝播する
+- Note: Javaと違って、Scalaは宣言例外がない
+- 例外を宣言したい場合は、`@throw`アノテーションをつける
+
 # 単語
 
 - handful: 一握り、少量、少数
@@ -366,3 +393,5 @@ println(if (!args.isEmpty) args(0) else "default.txt")
 - whatsoever: どんなものであれ、何であれ、少しの～もない
 - gymnastics: 体操、体育
 - weird: 異様な、気味の悪い、奇妙な
+- consistency: 一貫性、一致、濃度
+- in turn: 次々に、順番に、お返しとして
