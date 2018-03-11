@@ -372,26 +372,28 @@ println(if (!args.isEmpty) args(0) else "default.txt")
 - Note: Javaと違って、Scalaには宣言例外がない
 - 例外を宣言したい場合は、`@throw`アノテーションをつける
 
-# 単語
 
-- handful: 一握り、少量、少数
-- inception: 初め、発端
-- after another: 相次ぎ
-- accumulate: 蓄積する、積もる、堆積する
-- sufficient: 十分な、足りる
-- turn out: 結果的に～であることがわかる、～という状態で終わる、～になる
-- construct: 構文
-- relevant: 関係のある、現実の問題に直結する
-- nonetheless: それにもかかわらず
-- ingredient: 構成要素、成分、原料
-- combine: ～を混ぜ合わせる、～を結び付ける、兼ね備える
-- arbitrary: 気まぐれな、任意の、偶然による
-- entirety: 完全であること、全部、全体
-- propagate: 繁殖する、伝搬する、伝播する
-- unwind: 緊張をほぐす、くつろぐ、ほどく
-- paradoxical: 逆説的な、奇異な、奇妙な
-- whatsoever: どんなものであれ、何であれ、少しの～もない
-- gymnastics: 体操、体育
-- weird: 異様な、気味の悪い、奇妙な
-- consistency: 一貫性、一致、濃度
-- in turn: 次々に、順番に、お返しとして
+## The finally clause
+
+- (正常に終わったのか例外をcatchしたのか上位にスローしたのか)終わり方を気にせず実行したいコードがある場合には、finally節で囲むことができる
+- 例えば、メソッドが例外をスローして終わったかどうかにかかわらずオープンしたファイルをクローズしたい場合は以下のように記載する
+
+```scala
+    import java.io.FileReader
+
+    val file = new FileReader("input.txt")
+    try {
+      // Use the file
+    } finally {
+      file.close()  // Be sure to close the file
+    }
+```
+
+- Note: 上記のコードはファイルやソケット、データベースの接続のようなノンメモリリソースを確保するための慣用的な表現である
+- 最初にリソースを求める
+- リソースを使い始める場所でtryブロックを開始する
+- 最後にfinallyブロックでリソースをクローズする
+- このイデオムはJavaでもScalaでも同じであるが、Scalaはより短いコードで同じ効果を持つloan patternというと呼ばれるテクニックを採用することもできる
+- loan patternについては9.4章で説明する
+
+# 単語
