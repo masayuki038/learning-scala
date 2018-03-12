@@ -396,4 +396,47 @@ println(if (!args.isEmpty) args(0) else "default.txt")
 - このイデオムはJavaでもScalaでも同じであるが、Scalaはより短いコードで同じ効果を持つloan patternというと呼ばれるテクニックを採用することもできる
 - loan patternについては9.4章で説明する
 
+## Yielding a value
+
+- Scalaのほとんどの制御構造と同様に、`try-catch-finally`は値を返す
+- 例えば、以下のコードはURLのparseをtryの中で行っているが、URLがマズい形式の時にはdefaultの値が返るようになっている
+- その結果は、例外が発生しない時のtry節の結果か、例外がスローされてキャッチしたcatch節の結果である
+- もし例外がスローされてキャッチされなかった場合は、式は全く結果を返さない
+- finally節で計算される値は、もしあれば、捨てられる
+- 通常、finally節はファイルをクローズするようなクリーンアップ系の処理を行う
+- それらは通常メイン処理やキャッチ節で計算する値を変更するべきではない
+
+```scala
+    import java.net.URL
+    import java.net.MalformedURLException
+
+    def urlFor(path: String) =
+      try {
+        new URL(path)
+      } catch {
+        case e: MalformedURLException =>
+          new URL("http://www.scala-lang.org")
+      }
+```
+
+- Javaに慣れ親しんでいるとして、Javaが`try-finally`で値を返さないからといってScalaがJavaと振る舞いが異なるのは問題ではない
+- Javaでは明示的なreturnステートメントを含むfinally節や例外をスローするのは、その前に`try-catch`で発生したことを覆い隠す
+
+```scala
+  def f(): Int = try { return 1 } finally { return 2 }
+```
+
+- `f()`は2を返す
+
+```
+  def g(): Int = try { 1 } finally { 2 }
+```
+
+- 対照的に`g()`は1を返す
+- これらの関数の振る舞いは多くのプログラマを驚かせる
+- それゆえ、通常、finally節では値を返すのを避けるべき
+- finally節の最も良い考え方は、オープンしていたファイルをクローズするような副作用を確実にすることである
+
 # 単語
+
+- overrule: 覆い隠す、却下する、発言を封じる
