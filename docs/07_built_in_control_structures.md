@@ -470,6 +470,58 @@ println(if (!args.isEmpty) args(0) else "default.txt")
 - `match`式の結果の値は`friend`変数に格納される
 - コードが短くなることを除いて、そのコードは2つの異なる関心事に分離される、一つ目は食べ物を選ぶこと、そして表示すること
 
+# 7.6 Living without break and continue
+
+- breakやcontinueについて言及してこなかったことに気づくだろう
+- 次の章で説明するように、Scalaではそれらは関数リテラルに調和しないので、これらの命令を省略する
+- `continue`がwhileループの中で何を意味するかは明確ですが、関数リテラル内ではどういう意味になるだろう？
+- Scalaは命令型と関数型の両方のプログラミングスタイルをサポートするが、このケースでは言語をシンプルにする代わりに、関数型プログラミングに少し偏っている
+- けれども心配する必要はない。`break`や`continue`を使わないプログラミングの方法はたくさんある
+- そしてもし関数リテラルの利点を取りたいなら、これらの代替はしばしば元のコードを短くする
+- 最もシンプルなアプローチは、すべての`continue`をifに、`break`をbooleanに変更することだ
+- booleanの値はwhile loopを続けるべきかどうかを示す
+- 例えば、「.scala」で終わっていて且つ「-」で始まらない引数を探すことを考える
+- Javaで`break`と`continue`を使って書くと以下のようになる
+
+```java
+  int i = 0;                // This is Java
+  boolean foundIt = false;
+  while (i < args.length) {
+    if (args[i].startsWith("-")) {
+      i = i + 1;
+      continue;
+    }
+    if (args[i].endsWith(".scala")) {
+      foundIt = true;
+      break;
+    }
+    i = i + 1;
+  }
+```
+
+- このJavaコードをScalaに直接書き直す為に、if～continueの代わりにwhile loopのボディをifで囲む
+- breakを取り除く為に、通常はループを続けるかどうかを示すbooleanを追加するが、このケースではfoundItを再利用する
+- これらのトリックを使って、コードを整理すると以下のようになる
+
+```scala
+    var i = 0
+    var foundIt = false
+
+    while (i < args.length && !foundIt) {
+      if (!args(i).startsWith("-")) {
+        if (args(i).endsWith(".scala"))
+          foundIt = true
+      }
+      i = i + 1
+    }
+```
+
+
 # 単語
 
 - overrule: 覆い隠す、却下する、発言を封じる
+- mesh: (罠)にかかる、かみ合う、調和する
+- suppose: 思う、仮定する、推量する
+- get rid of: 取り除く、追い出す、解放される
+- in exchange for: ～の見返りに、～の代わりに
+- transliterate: 書き直す、音訳する
