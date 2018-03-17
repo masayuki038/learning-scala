@@ -542,6 +542,133 @@ println(if (!args.isEmpty) args(0) else "default.txt")
 - それぞれの再起呼び出しは関数の最初に戻るように実装されるだろう
 - 末尾再起呼び出しの最適化については、8.9章で説明する
 
+# 7.7 Variable scope
+
+- このセクションでは制御構造を使ってScalaでscopeがどのように働くか説明する
+
+## Fast track for Java programmers
+
+- あなたがJavaプログラマなら、ScalaのスコープのルールはほとんどJavaと同じである
+- JavaとScalaにひとつ違いがある、それはScalaはネストしたスコープに同じ変数名を使うことができる
+- それゆえ、あなたがJavaプログラマなら、このセクションを少なくとも1回はざっと見てほしい
+- Scalaプログラムの変数定義は、その名前を使うことができるスコープを定義する
+- スコープのもっとも一般的な例は、通常カーリー括弧が新しいスコープを導入するということだ
+- カーリー括弧の内側で定義されたものは何であれ、カーリー閉じ括弧の後にはスコープ外になる
+
+```scala
+    def printMultiTable() {
+
+      var i = 1
+      // only i in scope here
+
+      while (i <= 10) {
+
+        var j = 1
+        // both i and j in scope here
+
+        while (j <= 10) {
+
+          val prod = (i * j).toString
+          // i, j, and prod in scope here
+
+          var k = prod.length
+          // i, j, prod, and k in scope here
+
+          while (k < 4) {
+            print(" ")
+            k += 1
+          }
+
+          print(prod)
+          j += 1
+        }
+
+        // i and j still in scope; prod and k out of scope
+
+        println()
+        i += 1
+      }
+
+      // i still in scope; j, prod, and k out of scope
+    }
+```
+
+- `printMultiFunction`は九九を出力する
+- この関数の最初のステートメントは`i`という名前の変数を導入して整数の値1で初期化する
+- `i`という名前はその関数内で使うことができる
+- `printMultiTable`の次のステートメントはwhile loopである
+
+```scala
+  while (i <= 10) {
+
+    var j = 1
+    ...
+  }
+```
+
+- `i`はスコープ内なので、ここで使うことができる
+- while loopの最初のステートメントは、jという名前の変数を定義し、また整数1で初期化する
+- jはwhile loopのカーリー括弧の内側で定義されたので、while loopの中でしか使えない
+- もしwhile loopのカーリー閉じ括弧の後に`j`で何かしようとすると、その後のコメントにあるように`j`と`prod`と`k`はスコープ外になり、コンパイルできない
+- この例で定義されているすべての変数`i`、`j`、`prod`、`k`はローカル変数である
+- 変数が実行される度に、新しいローカル変数のセットが使用される
+- 一度変数が定義されると、同じスコープ内では同じ名前を使うことができない
+
+```scala
+  val a = 1
+  val a = 2 // Does not compile
+  println(a)
+```
+
+- 一方で、外のスコープの変数と同じ名前を持つ変数を内側のスコープで定義することはできる
+
+```scala
+  val a = 1;
+  {
+    val a = 2 // Compiles just fine
+    println(a)
+  }
+  println(a)
+```
+
+- 上記のコードが実行されると、まず2が表示され、その後1が表示される
+- なぜなら、カーリー括弧の内側で定義されたものはカーリー閉じ括弧までの間の、異なる変数スコープだから
+- ScalaとJavaで覚えておくべき違いはこの一点で、Javaは外側のスコープで定義された変数名を内側のスコープで定義することができない
+- Scalaプログラムにおいては、内側の変数は外側の変数をシャドウする、と言われている
+- なぜなら、外側の変数は内側のスコープでは見えなくなるから
+- インタープリタでは、以下のようにシャドウされる
+
+```scala
+  scala> val a = 1
+  a: Int = 1
+
+  scala> val a = 2
+  a: Int = 2
+
+  scala> println(a)
+  2
+```
+
+- インタープリタでは、変数名の再利用ができる
+- 中でも、インタープリタで初めて変数を定義した時に間違えた場合、これを変更することができる
+- これが可能な理由は、インタープリタはそれぞれの新しいステートメントで新しいネストしたスコープを作成するからである
+- それゆえ、先程の例は以下のようになる
+
+```scala
+  val a = 1;
+  {
+    val a = 2;
+    {
+      println(a)
+    }
+  }
+```
+
+- このコードをコンパイルしてScalaスクリプトとして実行したり、インタープリタにコードをタイプすると、2が出力される
+- このようなコードは、コードの読み手はとても混乱することを覚えておいてほしい
+- なぜなら、ネストされたスコープでは変数名は新しい意味を持つからである
+- 普通は、外側のスコープの変数をシャドウするよりも、新しい意味のある名前を選ぶ方が良い
+
 # 単語
 
 - overrule: 覆い隠す、却下する、発言を封じる
@@ -550,3 +677,5 @@ println(if (!args.isEmpty) args(0) else "default.txt")
 - get rid of: 取り除く、追い出す、解放される
 - in exchange for: ～の見返りに、～の代わりに
 - transliterate: 書き直す、音訳する
+- skim: ～をざっと読む、～をかすっていく、～の表面を覆う
+- among other thing: 中でも
