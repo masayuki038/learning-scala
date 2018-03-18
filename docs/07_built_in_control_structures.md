@@ -722,18 +722,3 @@ println(if (!args.isEmpty) args(0) else "default.txt")
 - それらの振る舞いは命令言語と非常に良く似た働きをするが、価値をもたらす傾向がある為、関数的なスタイルもサポートする
 
 # 単語
-
-- overrule: 覆い隠す、却下する、発言を封じる
-- mesh: (罠)にかかる、かみ合う、調和する
-- suppose: 思う、仮定する、推量する
-- get rid of: 取り除く、追い出す、解放される
-- in exchange for: ～の見返りに、～の代わりに
-- transliterate: 書き直す、音訳する
-- skim: ～をざっと読む、～をかすっていく、～の表面を覆う
-- among other thing: 中でも
-- telltale signs: 予兆現象
-- telltale: 密告者、証拠、タイムレコーダー
-- concatenate: 鎖状につなぐ
-- reveal: 明らかにする、公開する、～を啓示する
-- multiplication table: 九九
-- leave room for: ～の余地を残す
