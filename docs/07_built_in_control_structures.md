@@ -669,6 +669,58 @@ println(if (!args.isEmpty) args(0) else "default.txt")
 - なぜなら、ネストされたスコープでは変数名は新しい意味を持つからである
 - 普通は、外側のスコープの変数をシャドウするよりも、新しい意味のある名前を選ぶ方が良い
 
+# 7.8 Refactoring imperative-style code
+
+- 関数型言語の洞察を得る為に、このセクションでは前回の九九を表示する命令言語のアプローチで書かれたコードをリファクタリングする
+
+```scala
+    // Returns a row as a sequence
+    def makeRowSeq(row: Int) =
+      for (col <- 1 to 10) yield {
+        val prod = (row * col).toString
+        val padding = " " * (4 - prod.length)
+        padding + prod
+      }
+
+    // Returns a row as a string
+    def makeRow(row: Int) = makeRowSeq(row).mkString
+
+    // Returns table as a string with one row per line
+    def multiTable() = {
+
+      val tableSeq = // a sequence of row strings
+        for (row <- 1 to 10)
+        yield makeRow(row)
+
+      tableSeq.mkString("\n")
+    }
+```
+
+- 命令言語のスタイルを2つの方法で明らかにする
+- 1つ目は、`printMultiTable`は九九を標準出力に表示する、という副作用がある
+- なので、九九が文字列で返ってくるように関数を修正した
+- 関数は全く表示しないので、`multiTable`という名前に変更した
+- 前述のように、副作用のない関数の利点はユニットテストをしやすいことである
+- `printMultiTable`をテストする為には、出力内容が正しいかどうかを確認する為に`print`や`println`を少し再定義する必要がある
+- `multiTable`をテストするのはもっと簡単で、結果として返ってくる文字列をチェックすれば良い
+- `printMultiTable`の命令言語スタイルの他の予兆は、while loopとvarsである
+- 対照的に、`multiTable`はvals、for式、helper関数を使い、`mkString`を呼び出している
+- コードをより読みやすくする為に、`makeRow`と`makeRowSeq`という2つのhelper関数を作成した
+- `makeRowSeq`関数は1から10までの列番号でループするfor式を使う
+- for文の内容は行と列の計算を行い、結果と結果の間を埋めるスペースを決め、そのスペースと結果を連結して文字列を生成する
+- for式の結果はそれぞれの要素が文字列として生成されたものを含むシーケンスになる
+- その他のヘルパー関数は`makeRow`で、`makeRowSeq`の戻り値を指定して`mkString`を実行するだけである
+- `mkString`はそのシーケンスを連結し、一つの文字列として返す
+- `multiTable`メソッドは最初に1～10までの行番号でループしたfor式の結果で`tableSeq`を初期化し、それぞれのforは行の文字列を取得する為に`makeRow`を呼び出す
+- そしてこのfor式で文字列が生成され、このfor式の結果は行の文字列のシーケンスとなる
+- 残りのタスクは文字列のシーケンスを一つの文字列に変換するだけだ
+- `mkString`に"\n"を渡して呼び出してそれぞれの文字列の間に改行を入れた一つの文字列を生成して完成
+
+# 7.9 Conclusion
+
+- Scalaのビルトインの制御構造は小さいが、しっかり仕事をする
+- それらの振る舞いは命令言語と非常に良く似た働きをするが、価値をもたらす傾向がある為、関数的なスタイルもサポートする
+
 # 単語
 
 - overrule: 覆い隠す、却下する、発言を封じる
@@ -679,3 +731,9 @@ println(if (!args.isEmpty) args(0) else "default.txt")
 - transliterate: 書き直す、音訳する
 - skim: ～をざっと読む、～をかすっていく、～の表面を覆う
 - among other thing: 中でも
+- telltale signs: 予兆現象
+- telltale: 密告者、証拠、タイムレコーダー
+- concatenate: 鎖状につなぐ
+- reveal: 明らかにする、公開する、～を啓示する
+- multiplication table: 九九
+- leave room for: ～の余地を残す
