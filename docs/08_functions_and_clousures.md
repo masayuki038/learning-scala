@@ -92,6 +92,37 @@
   }
 ```
 
+- この例では、privateメソッドである`processLine`を`processFile`のローカル関数にすることで、元のLongLinesをリファクタリングした
+- そうする為に、private修飾子を除去し、`processFile`の内側に`processLine`の定義を移動した
+- `processLine`は`processFile`の内側にあるローカル関数なので、外部からアクセスすることはできない
+- `processLine`は他にも改善されている点がある
+- 引数で渡された`filename`と`width`は変更されることなくヘルパー関数に渡されている
+- ローカル関数は外側の関数の引数にアクセスすることができる
+- 以下のように、`processLine`の外側の引数を使うことができる
+
+```scala
+    import scala.io.Source
+
+    object LongLines {
+
+      def processFile(filename: String, width: Int) {
+
+        def processLine(line: String) {
+          if (line.length > width)
+            print(filename +": "+ line)
+        }
+
+        val source = Source.fromFile(filename)
+        for (line <- source.getLines)
+          processLine(line)
+      }
+    }
+```
+
+- 外側の関数の引数の使用はScalaが提供するネストの有用な例である
+- 7.7章で説明するネストとスコープは、関数を含むすべてのScalaの構文に適用できる
+- シンプルな責務だが、特にファーストクラス関数のある言語にはとてもパワフルである
+
 # 単語
 
 - pollute: ～を汚染する、～の神聖さを汚す
