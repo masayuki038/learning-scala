@@ -327,6 +327,55 @@ scala> def sum(a: Int, b: Int, c: Int) = a + b + c
 - 例えば、`sum(a: Int, b: Int, c: Int): Int`のようなローカル関数がある場合、同じパラメータリストを取り同じ結果を返す`apply`メソッドを関数値でwrapすることができる
 - この関数値に引数を適用する時、`sum`関数にそれらの引数を順番に適用し、結果を返す
 - メソッドやネストした関数を割り当てたり、もう一方の関数へ引数を渡したりすることはできないが、関数名の後に_を配置することによって、メソッドやネストした関数を関数値でwrapすることができる
+- `sum _`は確かに部分適用された関数であるけれども、何故これを呼び出すのか明らかではない
+- `sum _`の場合は、引数を全く適用していない
+- しかし、全引数ではなくいくつかの引数を部分適用することもできる
+
+```scala
+  scala> val b = sum(1, _: Int, 3)
+  b: (Int) => Int = <function>
+```
+
+- このケースでは、`sum`の最初と最後の引数を提供しているが、真ん中の引数は指定していない
+- ひとつの引数が抜けているで、Scalaは1つの引数を取る関数クラスを生成する
+- それに一つの引数を与えて呼び出すと、この生成された関数の`apply`メソッドは1つの引数を渡してsum関数を呼び出す
+
+```scala
+  scala> b(2)
+  res15: Int = 6
+```
+
+- もし`println _`や`sum _`のようにすべてのパラメータを省略した部分適用関数を書く場合、_を省略することができる
+
+```scala
+ someNumbers.foreach(println _)
+```
+
+- 上記のようなケースを以下のように書くことができる
+
+```scala
+ someNumbers.foreach(println)
+```
+
+- 最後のケースは、この例の`foreach`の呼び出しのように、関数が必要になった箇所でのみ書くことができる
+- コンパイラは関数がこのケースで必要とされることを知っている、なぜなら`foreach`は一引数の関数を取るからである
+- 関数を取る場所以外でこのような記述を試みるとエラーになる
+
+```scala
+  scala> val c = sum
+  <console>:5: error: missing arguments for method sum...
+  follow this method with `_' if you want to treat it as
+     a partially applied function
+         val c = sum
+                 ^
+  scala> val d = sum _
+  d: (Int, Int, Int) => Int = <function>
+
+  scala> d(10, 20, 30)
+  res17: Int = 60
+```
+
+
 
 # 単語
 
