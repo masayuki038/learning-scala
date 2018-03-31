@@ -487,6 +487,55 @@ scala> def sum(a: Int, b: Int, c: Int) = a + b + c
 - Scalaコンパイラはキャプチャされたパラメータがスタックの代わりにヒープに存在するように事態を調整する
 - それゆえ、パラメータはメソッド呼び出しよりも長いスコープで存続する
 
+# 8.8 Repeated parameters
+
+- Scalaは関数の最後のパラメータが繰り返されることを明記することができる
+- これはクライアントに関数へ可変長のリストの変数を渡すことができる
+- 繰り返されるパラメータを示す為、パラメータの型の後にアスタリスクをつける
+
+```scala
+  scala> def echo(args: String*) =
+           for (arg <- args) println(arg)
+  echo: (String*)Unit
+```
+
+- このようにすると、`echo`は0から多数の文字列を指定して呼び出すことができる
+
+```scala
+  scala> echo()
+
+  scala> echo("one")
+  one
+
+  scala> echo("hello", "world!")
+  hello
+  world!
+```
+
+- 関数の内部では、繰り返されるパラメータの型は指定された型の配列になる
+- それゆえ、`echo`関数の内部では引数の型は、`String*`は実際には`Array[String]`になる
+- もし適切な型の配列を持っていて、それを繰り返しのパラメータとして渡すと、コンパイルエラーになる
+
+```scala
+  scala> echo(arr)
+  <console>:7: error: type mismatch;
+   found   : Array[java.lang.String]
+   required: String
+         echo(arr)
+              ^
+```
+
+- これを行うには、配列の引数の後にコロンと`_*`シンボルを追加する必要がある
+
+```scala
+  scala> echo(arr: _*)
+  What's
+  up
+  doc?
+```
+
+- この記法はコンパイラに対し、一つの引数としてではなく、配列のそれぞれの要素を`echo`に渡すことを示す
+
 # 単語
 
 - pollute: ～を汚染する、～の神聖さを汚す
@@ -502,3 +551,4 @@ scala> def sum(a: Int, b: Int, c: Int) = a + b + c
 - roundabout: メリーゴーラウンド、回転木馬
 - roundabout way: 迂回路、回り道
 - consistent with: ～と一致する、～と調和する
+- denote: ～を意味する、示す、～の印である
