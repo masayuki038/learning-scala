@@ -573,6 +573,74 @@ scala> def sum(a: Int, b: Int, c: Int) = a + b + c
 - しばしば、再帰呼出しはloopベースよりもエレガントで短く書くことができる
 - そのソリューションは末尾再帰で、実行時のオーバーヘッドを気にしなくて良い
 
+
+## Tracing tail-recursive functions
+
+- 末尾再帰関数は、おのおのの呼び出しで新しいスタックフレームを作成しない
+- すべての呼び出しは単一のフレームで行われる
+- これはプログラマが失敗したプログラムのスタックトレースを調査する時に驚く
+- 例えば、この関数は何度か自分自身を呼び出して、例外をスローする
+
+```scala
+  def boom(x: Int): Int =
+    if (x == 0) throw new Exception("boom!")
+    else boom(x - 1) + 1
+```
+
+- この関数は末尾再帰関数ではない、何故なら再帰呼出しの後にインクリメント操作を実行しているからだ
+- それを実行すると、期待通りの結果が返る
+
+```scala
+  scala>  boom(3)
+  java.lang.Exception: boom!
+        at .boom(<console>:5)
+        at .boom(<console>:6)
+        at .boom(<console>:6)
+        at .boom(<console>:6)
+        at .<init>(<console>:6)
+  ...
+```
+
+- `boom`を変更すると、末尾再帰になる
+
+```scala
+  def bang(x: Int): Int =
+    if (x == 0) throw new Exception("bang!")
+    else bang(x - 1)
+```
+
+- 実行すると、以下の結果になる
+
+```scala
+  scala> bang(5)
+  java.lang.Exception: bang!
+        at .bang(<console>:5)
+        at .<init>(<console>:6)
+  ...
+```
+
+- この時、`bang`の単一のスタックフレームだけが現れる
+- スタックトレースを確認する時、もし末尾再帰で混乱した場合は、以下を設定して末尾再帰しないようにすることもできる
+
+```
+  -g:notailcalls
+```
+
+- この設定をすると、以下のように表示される
+
+```scala
+  scala> bang(5)
+  java.lang.Exception: bang!
+        at .bang(<console>:5)
+        at .bang(<console>:5)
+        at .bang(<console>:5)
+        at .bang(<console>:5)
+        at .bang(<console>:5)
+        at .bang(<console>:5)
+        at .<init>(<console>:6)
+  ...
+```
+
 # 単語
 
 - pollute: ～を汚染する、～の神聖さを汚す
