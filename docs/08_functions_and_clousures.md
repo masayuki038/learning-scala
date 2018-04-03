@@ -573,7 +573,6 @@ scala> def sum(a: Int, b: Int, c: Int) = a + b + c
 - しばしば、再帰呼出しはloopベースよりもエレガントで短く書くことができる
 - そのソリューションは末尾再帰で、実行時のオーバーヘッドを気にしなくて良い
 
-
 ## Tracing tail-recursive functions
 
 - 末尾再帰関数は、おのおのの呼び出しで新しいスタックフレームを作成しない
@@ -641,6 +640,41 @@ scala> def sum(a: Int, b: Int, c: Int) = a + b + c
   ...
 ```
 
+## Limits of tail recursion
+
+- Scalaの末尾再帰の使用はかなり制限されている
+- なぜなら、JVMのインストラクションセットがより進んだ末尾再帰の形式になるように実装することをとても難しくしている
+- Scalaだけは、同じ関数の呼び出しをする再帰呼び出しを直接最適化する
+- もし再帰が間接的だったら、交互に呼ばれる2つの再帰関数は最適化できない
+
+```scala
+  def isEven(x: Int): Boolean =
+    if (x == 0) true else isOdd(x - 1)
+  def isOdd(x: Int): Boolean =
+    if (x == 0) false else isEven(x - 1)
+```
+
+- 最後の呼び出しが関数値の場合も、末尾再帰の最適化は行われない
+
+```scala
+  val funValue = nestedFun _
+  def nestedFun(x: Int) {
+    if (x != 0) { println(x); funValue(x - 1) }
+  }
+```
+
+- `funValue`変数は`nestedFun`の呼び出しをwrapしている関数値を参照している
+- 関数値に引数を適用すると、同じ引数の値が`nestedFun`に適用されて、値が返る
+- それゆえ、Scalaコンパイラは末尾再帰の最適化を行うと期待するかもしれないが、このケースはそうならない
+- それゆえ、末尾再帰最適化はメソッドやネストしたメソッドを最後に直接呼び出す場合に限定される
+
+# Conclusion
+
+- Scalaはメソッドに加えて、ローカル関数、関数リテラル、関数値を提供する
+- 通常の関数呼び出しに加えて、部分適用された関数や可変長引数の関数を提供する
+- 可能な時は、関数呼び出しは末尾呼び出しの最適化が行われる
+- それゆえ、多くの見た目が良い再帰関数が、自分で最適化したようなwhile loopを使うのと同じくらい速く動く
+
 # 単語
 
 - pollute: ～を汚染する、～の神聖さを汚す
@@ -660,3 +694,4 @@ scala> def sum(a: Int, b: Int, c: Int) = a + b + c
 - preferable: 一層良い、より好ましい、より望ましい
 - brevity: 短さ、簡潔さ
 - tempted to: ～する気にさせられる、～したくなる、～した方がいいという気になる
+- mutually: 互いに、共通に、双方に
