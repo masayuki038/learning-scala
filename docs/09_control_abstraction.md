@@ -60,6 +60,33 @@
 ```
 
 - このアプローチは動的言語で機能するが、Scalaはこれを認めない。どうするか？
+- メソッドの名前を値として渡すことはできないが、呼びたいメソドを関数値として渡すことで同じ効果が得られる
+- このケースでは、単にクエリに対してファイル名をチェックするだけのメソッドに、matcherパラメータを追加することができる
+- このメソッドのバージョンでは、`if`節がファイル名をチェックする為にmatcherを使うようになっている
+- 厳密には、このチェックはmatcherの仕様に依存する
+- matcher関数は、`name`と`query`の2つの文字列を取り、booleanを返す
+- だから関数の型は`(String, String) => Boolean`である
+- 新しい`filesMatching`ヘルパーメソッドを呼び出すことで、3つの検索メソッドをシンプルにすることができる
+
+```scala
+  def filesEnding(query: String) =
+    filesMatching(query, _.endsWith(_))
+
+  def filesContaining(query: String) =
+    filesMatching(query, _.contains(_))
+
+  def filesRegex(query: String) =
+    filesMatching(query, _.matches(_))
+```
+
+- この例の関数リテラルは前章で紹介したプレースホルダー記法を使っているが、まだ自然に感じられないかもしれない
+- それゆえ、ここではこの例でプレースホルダがどのように使われているかを明確にする
+- `filesEnding`メソッドで使われている``_.endsWith(_)`という関数リテラルは、以下と同様である。
+
+```scala
+(fileName: String, query: String) => fileName.endsWith(query)
+```
+
 
 # 単語
 - vary: 変わる、変化する
@@ -70,3 +97,6 @@
 - immense: 巨大な、計り知れない、すてきな
 - gìve ín: 提出する、手渡す、降参する
 - factor(動詞): 因数に分解する
+- sole: 唯一の、だけの、未婚の
+- clarification: 明確化、説明、浄化
+- precisely: 正確に、厳密に、詳細に
