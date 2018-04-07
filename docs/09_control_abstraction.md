@@ -87,6 +87,45 @@
 (fileName: String, query: String) => fileName.endsWith(query)
 ```
 
+- `fileMatching`は2つの文字列と必要とするが、型の指定をする必要はない
+- それゆえ、`(fileName, query) => fileName.endsWith(query)`と書くことができる
+- それぞれのパラメータは関数本体で一度しか使われない上、最初のパラメータである`fileName`は関数内で最初に、二番目のパラメータである`query`は関数内で2番目に使われているので、プレースホルダ(_)を使える
+- `_.endsWith(_)`は、最初のアンダースコアは最初のパラメータであるファイル名、二番目のアンダースコアは2番目のパラメータであるquery文字列になる
+- このコードはすでにシンプル化されているが、実際にはもっと短くできる
+- `fileMatching`に渡されている`query`は、matcher関数に渡される以外に何もしていない
+- 呼び出し側はすでにクエリを知っているので、この行ったり来たりは不要である
+- 単に`fileMatching`とmatcherから`query`を取り除くと、以下のようになる
+
+```scala
+    object FileMatcher {
+      private def filesHere = (new java.io.File(".")).listFiles
+
+      private def filesMatching(matcher: String => Boolean) =
+        for (file <- filesHere; if matcher(file.getName))
+          yield file
+
+      def filesEnding(query: String) =
+        filesMatching(_.endsWith(query))
+
+      def filesContaining(query: String) =
+        filesMatching(_.contains(query))
+
+      def filesRegex(query: String) =
+        filesMatching(_.matches(query))
+    }
+```
+
+- この例は、従来コードの重複を削減することが難しかったケースでも、ファーストクラス関数を用いて解消する方法を説明している
+- 例えばJavaでは、一つの文字列を受け取りBooleanを返すメソッドを含むinterfaceを作成して、無名クラスを作成し、`fileMatching`関数に渡すことができた
+- このアプローチはコードの削減はできるだろうが、同時に新しいコードを沢山追加することになる
+- それゆえ、その恩恵はコストの価値はなく、なおコードの重複は残り続けるだろう
+- また、この例はクロージャがどのようにコードの重複を削減するかを説明している
+- `_.endsWith(_)`や`_.contains(_)`のような前の例で使われている関数リテラルは、実行時にクロージャではない関数値を生成している
+- なぜなら、それらはy自由関数をキャプチャしていない
+- 例えば、`_endsWith(_)`の式で使われている両変数は、関数に渡された引数を意味するアンダースコアで表されている
+- それゆえ、`_endsWith(_)`は2つの束縛された変数を使っているが、自由変数は使っていない
+- 反対に、`_.endsWith(query)`という関数リテラルは、アンダースコアで表された1つの束縛された変数と、`query`という名前の一つの自由変数が含まれている
+- それは、コードをもっとシンプルにする為に、`fileMatching`関数から`query`パラメータを除去するクロージャをScalaがサポートするので、そのようにしただけであ
 
 # 単語
 - vary: 変わる、変化する
@@ -100,3 +139,7 @@
 - sole: 唯一の、だけの、未婚の
 - clarification: 明確化、説明、浄化
 - precisely: 正確に、厳密に、詳細に
+- forth: 前へ、先へ、前方へ
+- back and forth: 堂々巡りの議論、後退したり前進したりの、行ったり来たりの
+- as well: なお、おまけに、その上
+- thereby: それによって
