@@ -127,6 +127,59 @@
 - 反対に、`_.endsWith(query)`という関数リテラルは、アンダースコアで表された1つの束縛された変数と、`query`という名前の一つの自由変数が含まれている
 - それは、コードをもっとシンプルにする為に、`fileMatching`関数から`query`パラメータを除去するクロージャをScalaがサポートするので、そのようにしただけであ
 
+# 9.2 Simplifying client code
+
+- 前回の例は、APIを作る時に、高階関数がコードの重複を減らすことができることを説明した
+- 高階関数を使うもう一つの重要な事項は、API自身に高階関数を含めることにより、クライアントコードを短くすることができる
+- 良い例は、Scalaのコレクション型のメソッドで提供されている
+- 指定された値がコレクションに含まれるかどうかを返す`exists`について考える
+- 要素の検索は、まず変数をfalseで初期化し、それぞれの要素をチェックして、見つけたら変数をtrueにする
+- これは、負の数が含まれているかどうかを返すのにこのアプローチを使っているメソッドである
+
+```scala
+  def containsNeg(nums: List[Int]): Boolean = {
+    var exists = false
+    for (num <- nums)
+      if (num < 0)
+        exists = true
+    exists
+  }
+```
+
+- けれども、そのメソッドの定義をもっと短く書く方法は、このように渡されたリストの高階関数である`exists`メソッドを呼び出すことである
+
+```scala
+  def containsNeg(nums: List[Int]) = nums.exists(_ < 0)
+```
+
+- `exists`メソッドは制御抽象概念を表している
+- それは組み込みの`for`や`while`よりもむしろScalaのライブラリによって提供されているループ構造である
+- 前の章で、高階関数である`fileMatching`はコードの重複を削減した
+- `exists`メソッドは同じような恩恵をもたらすが、`exists`はScalaのコレクションAPIで公開されているので、削減されるコードの重複はAPIのクライアントコード側である
+- もし`exists`が無ければ、奇数の値が含まれているかどうかをテストする`containsOdd`メソッドをを書く必要がある
+
+```scala
+  def containsOdd(nums: List[Int]): Boolean = {
+    var exists = false
+    for (num <- nums)
+      if (num % 2 == 1)
+        exists = true
+    exists
+  }
+```
+
+- `containsNeg`と比較すると、テスト条件だけが違うことが分かるだろう
+- 代わりに`exists`を使うと、以下のようになる
+
+```scala
+  def containsOdd(nums: List[Int]) = nums.exists(_ % 2 == 1)
+```
+
+- このバージョンのコードの内容は、検索する条件が違うことを除いて`containsNeg`の`exists`バージョンと同じである
+- さらに、ループ構造は`exists`メソッド自身によって取り除かれるので、コードの重複はより少ない
+- Scalaの標準ライブラリには多くの他のループメソッドがある
+- `exists`と同様に、使いどころが分かればコードを短くすることができる
+
 # 単語
 - vary: 変わる、変化する
 - vary from ～: ～とは異なる
@@ -143,3 +196,5 @@
 - back and forth: 堂々巡りの議論、後退したり前進したりの、行ったり来たりの
 - as well: なお、おまけに、その上
 - thereby: それによって
+- factor out: 取り除く
+- yet: まだ、けれども、さらに
