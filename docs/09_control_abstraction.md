@@ -241,6 +241,24 @@
   onePlus: (Int) => Int = <function>
 ```
 
+- `curriedSum(1)_`のアンダースコアは2番目のパラメータリストのプレースホルダである
+- その結果は、呼び出すと単に1に引数のIntの値を加算して結果を返す関数への参照である
+
+```scala
+  scala> onePlus(2)
+  res7: Int = 3
+```
+
+- これは2に引数のInt値を加算する関数を取得する方法である
+
+```
+  scala> val twoPlus = curriedSum(2)_
+  twoPlus: (Int) => Int = <function>
+
+  scala> twoPlus(2)
+  res8: Int = 4
+```
+
 
 # 単語
 - vary: 変わる、変化する
