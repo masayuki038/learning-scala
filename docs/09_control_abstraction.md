@@ -180,6 +180,68 @@
 - Scalaの標準ライブラリには多くの他のループメソッドがある
 - `exists`と同様に、使いどころが分かればコードを短くすることができる
 
+# 9.3 Currying
+
+- 1章で、Scalaはネイティブにサポートされているような新しい制御抽象概念を作成することができると言った
+- ここまで見てきた例では、実際に制御抽象概念ではあるけれども、それがネイティブにサポートされていると思う人は誰もいないだろう
+- より言語拡張のように感じられる制御抽象概念を作成する方法を理解する為に、まずはカリー化と呼ばれる関数プログラミングテクニックを理解する必要がある
+- カリー化された関数は一つではなく複数の引数を取る
+- 以下の関数は、`x`と`y`の2つの引数を取る、カリー化されていない例である
+
+```scala
+    scala> def plainOldSum(x: Int, y: Int) = x + y
+    plainOldSum: (Int,Int)Int
+
+    scala> plainOldSum(1, 2)
+    res4: Int = 3
+```
+
+- 反対に、以下の例は似たような関数でカリー化されている
+- 2つのIntパラメータのある一つのリストの代わりに、この関数にそれぞれ1つのパラメータを取る2つのリストを適用する
+
+```scala
+    scala> def curriedSum(x: Int)(y: Int) = x + y
+    curriedSum: (Int)(Int)Int
+
+    scala> curriedSum(1)(2)
+    res5: Int = 3
+```
+
+- `curriedSum`を呼び出した時に何が起こったかというと、実際には2つの関数を次々に呼び出している
+- 最初の関数は`x`という名前の一つのIntパラメータを取り、2つ目の関数の為に関数値を返す
+- 二つ目の関数は`y`という名前のIntパラメータを取る
+- これは、`first`という名前の関数は、`curriedSum`の最初の関数呼び出しを表したものである
+
+```scala
+  scala> def first(x: Int) = (y: Int) => x + y
+  first: (Int)(Int) => Int
+```
+
+- `first`に1を適用すると、二番目の関数が生成される
+
+```scala
+  scala> val second = first(1)
+  second: (Int) => Int = <function>
+```
+
+- 二番目の関数に2を適用すると、結果が生成される
+
+```scala
+  scala> second(2)
+  res6: Int = 3
+```
+
+- `first`と`second`の関数はまさにカリー化のプロセスを説明している
+- それらは直接`curriedSum`関数とつながっていない
+- それにも関わらず、`curriedSum`の2番目の関数を実際に取得する方法がある
+- 部分適用した関数`curriedSum`を使う為に、プレースホルダ記法を使う
+
+```scala
+  scala> val onePlus = curriedSum(1)_
+  onePlus: (Int) => Int = <function>
+```
+
+
 # 単語
 - vary: 変わる、変化する
 - vary from ～: ～とは異なる
@@ -198,3 +260,4 @@
 - thereby: それによって
 - factor out: 取り除く
 - yet: まだ、けれども、さらに
+- in spirit: 内心では、心の中で、心では
