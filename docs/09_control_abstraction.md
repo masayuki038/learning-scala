@@ -259,6 +259,51 @@
   res8: Int = 4
 ```
 
+# 9.4 Writing new control structures
+
+- 関数がファーストクラスである言語において、言語の文法が決まっていても、新しい制御構造を作ることができる
+- それに必要なことは、関数を引数にとるメソッドを作ることである
+- 例えば、ここに操作を2回繰り返して結果を返す、`twice`という制御構造がある
+
+```scala
+  scala> def twice(op: Double => Double, x: Double) = op(op(x))
+  twice: ((Double) => Double,Double)Double
+
+  scala> twice(_ + 1, 5)
+  res9: Double = 7.0
+```
+
+- この例の`op`の型は`Double => Double`で、それは一つのDoubleな引数を取り、Doubleの結果を返す
+- コードのあちらこちらで繰り返される制御パターンを見つける度に、新しい制御構造を実装することを検討するべきである
+- 前章ではとても特別な制御パターンを持つ`filesMatching`があった
+- より広く使われているコードパターンである、リソースをオープンし、操作し、リソースをクローズするケースについて考えてみる
+- 次のようなメソッドを使う制御抽象概念を捉えることができる
+
+```scala
+  def withPrintWriter(file: File, op: PrintWriter => Unit) {
+    val writer = new PrintWriter(file)
+    try {
+      op(writer)
+    } finally {
+      writer.close()
+    }
+  }
+```
+
+- これは以下のようにして使う
+
+```scala
+  withPrintWriter(
+    new File("date.txt"),
+    writer => writer.println(new java.util.Date)
+  )
+```
+
+- このメソッドを使う利点は、ユーザコードではない`withPrintWriter`が最後にファイルを閉じることを保証していることである
+- ファイルをクローズし忘れることが不可能である
+- このテクニックはローンパターンと呼ばれる。なぜなら、`withPrintWriter`のような制御抽象概念の関数は、リソースをオープンして関数に貸し出すからである
+- 例えば、前の例の`withPrintWriter`では`PrintWriter`を`op`関数に貸し出している
+- その関数が終わった時、借りていたリソースがないことを意味する
 
 # 単語
 - vary: 変わる、変化する
@@ -279,3 +324,4 @@
 - factor out: 取り除く
 - yet: まだ、けれども、さらに
 - in spirit: 内心では、心の中で、心では
+- effectively: 効果的に、効率的に、実際は
