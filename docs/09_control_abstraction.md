@@ -304,6 +304,72 @@
 - このテクニックはローンパターンと呼ばれる。なぜなら、`withPrintWriter`のような制御抽象概念の関数は、リソースをオープンして関数に貸し出すからである
 - 例えば、前の例の`withPrintWriter`では`PrintWriter`を`op`関数に貸し出している
 - その関数が終わった時、借りていたリソースがないことを意味する
+- リソースは、実際に確実にクローズする為に、正常に終了したか例外が発生したかに関わらず`finally`ブロックでクローズされる
+- より組み込みの制御構造のように見えるようにする一つの方法は、引数のリストを囲むのを丸括弧にする代わりにカーリー括弧を使うことである
+- Scalaでは引数がひとつのメソッドの起動で、丸括弧の代わりにカーリー括弧を使うことができる、例えば以下のように書ける
+
+```scala
+ scala> println("Hello, world!")
+  Hello, world!
+```
+
+```scala
+  scala> println { "Hello, world!" }
+  Hello, world!
+```
+
+- 2つめの例は、`println`の引数を囲む括弧の代わりにカーリー括弧を使用した
+- しかしながら、このカーリー括弧のテクニックは引数が一つの時だけ有効である
+- ルールに違反した場合は以下のようになる
+
+```scala
+  scala> val g = "Hello, world!"
+  g: java.lang.String = Hello, world!
+
+  scala> g.substring { 7, 9 }
+  <console>:1: error: ';' expected but ',' found.
+         g.substring { 7, 9 }
+```
+
+- カーリー括弧に2つの引数を指定したので、エラーになった
+- 代わりに丸括弧を使う必要がある
+
+```scala
+  scala> g.substring(7, 9)
+  res12: java.lang.String = wo
+```
+
+- この丸括弧の代わりにカーリー括弧を使う目的は、クライアントプログラマがカーリー括弧の間に関数リテラルを書けるようにする為である
+- これはメソッド呼び出しをより制御抽象概念と感じられるようにする
+- 例として以前定義した`withPrintWriter`メソッドを取り上げる
+- `withPrintWriter`の最後の形は引数を2つ取るので、カーリー括弧を使えない
+- それにもかかわらず、`withPrintWriter`に渡す関数は引数リストの最後の項目なので、最初のFileの引数を引数リストから取り出すカリー化を使うことができる
+- これは2つめの引数リストからローンのパラメータを引き剥がす
+
+```scala
+    def withPrintWriter(file: File)(op: PrintWriter => Unit) {
+      val writer = new PrintWriter(file)
+      try {
+        op(writer)
+      } finally {
+        writer.close()
+      }
+    }
+```
+
+- その新しいバージョンは、古いものと比べると、引数が2つあったところを、引数が1つであるリストを2つ取るところが異なる
+- 以下のようにより心地よい記法でメソッドを呼び出すことができる
+
+```scala
+  val file = new File("date.txt")
+
+  withPrintWriter(file) {
+    writer => writer.println(new java.util.Date)
+  }
+```
+
+- この例では、Fileを含む最初の引数リストは、丸括弧で括られている
+- 2番目の引数リストは、一つの関数値を含んでおり、カーリー括弧で括られている
 
 # 単語
 - vary: 変わる、変化する
@@ -325,3 +391,4 @@
 - yet: まだ、けれども、さらに
 - in spirit: 内心では、心の中で、心では
 - effectively: 効果的に、効率的に、実際は
+- pleasing: 愉快な、心地よい、満足な
