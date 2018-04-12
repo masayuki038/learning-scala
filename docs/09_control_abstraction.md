@@ -371,6 +371,47 @@
 - この例では、Fileを含む最初の引数リストは、丸括弧で括られている
 - 2番目の引数リストは、一つの関数値を含んでおり、カーリー括弧で括られている
 
+# 9.5 By-name parameters
+
+- 前章の`withPrintWriter`メソッドは、カーリー括弧の間に引数を取るという点で、`if`や`while`のような言語に組み込まれている制御構造とは異なる
+- `withPrintWriter`メソッドは`PrintWriter`型の一つの引数を取る
+- この引数は`writer =>`として現れる
+
+```scala
+  withPrintWriter(file) {
+    writer => writer.println(new java.util.Date)
+  }
+```
+
+- もし`if`や`while`に近いものを実装したいとして、カーリー括弧の間のコードに渡す値がないとしたらどうか？
+- このような時の為に、Scalaは`by-name`パラメータを提供している
+- 具体的な例として、`myAssert`と呼ばれるアサーションを実装したいとする
+- `myAssert`関数は入力として関数値と、実行するかどうかを決めるフラグを取る
+- そのフラグが設定されている場合、`myAssert`は渡された関数を実行してその結果が`true`であることを確認する
+- もしフラグが設定されていない場合、`myAssert`は何もしない
+- `by-name`パラメータを使わずに`myAssert`を書くと以下のようになる
+
+```scala
+  var assertionsEnabled = true
+
+  def myAssert(predicate: () => Boolean) =
+    if (assertionsEnabled && !predicate())
+      throw new AssertionError
+```
+
+- 定義自体は問題ないが、少々洗練されてない
+
+```scala
+myAssert(() => 5 > 3)
+```
+
+- 関数リテラルの引数無しの括弧と`=>`を省略したいと思って以下のように書くと、エラーになる
+
+```scala
+  myAssert(5 > 3) // Won't work, because missing () =>
+```
+
+
 # 単語
 - vary: 変わる、変化する
 - vary from ～: ～とは異なる
@@ -392,3 +433,7 @@
 - in spirit: 内心では、心の中で、心では
 - effectively: 効果的に、効率的に、実際は
 - pleasing: 愉快な、心地よい、満足な
+- differ from ～ in that...: ...という点で～と（は）異なる
+- awkward: 不器用な、下手な、扱いにくい
+
+
