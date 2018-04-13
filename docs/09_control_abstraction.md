@@ -411,6 +411,21 @@ myAssert(() => 5 > 3)
   myAssert(5 > 3) // Won't work, because missing () =>
 ```
 
+- `by-name`パラメータはまさにこの為に存在している
+- `by-name`パラメータにすることで、パラメータを与える時に`() =>`ではなく`=>`と書くことができる
+- 例えば、`myAssert`の条件のパラメータを`by-name`パラメータを使って`() => Boolean`を` => Boolean`と書き換えることができる
+
+```scala
+    def byNameAssert(predicate: => Boolean) =
+      if (assertionsEnabled && !predicate)
+        throw new AssertionError
+```
+
+- この形式はもちろん文法上正しく、この`boolAssert`を使ったコードは以前と全く同じように見える
+
+```scala
+ boolAssert(5 > 3)
+```
 
 # 単語
 - vary: 変わる、変化する
@@ -435,5 +450,7 @@ myAssert(() => 5 > 3)
 - pleasing: 愉快な、心地よい、満足な
 - differ from ～ in that...: ...という点で～と（は）異なる
 - awkward: 不器用な、下手な、扱いにくい
+- precisely: 正確に、まさに、明瞭に
+- look exactly as before: 以前と全く同じに見える
 
 
