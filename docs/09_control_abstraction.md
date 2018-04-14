@@ -421,11 +421,62 @@ myAssert(() => 5 > 3)
         throw new AssertionError
 ```
 
+- これで、assert関数の引数無しの括弧を省略することができる
+- その結果、`byNameAssert`を使うと、まさにビルトインの制御構造を使ったように見える
+
+```scala
+ byNameAssert(5 > 3)
+```
+
+- `by-name`型は、引数無しの括弧()を省略することができ、それはパラメータに対してのみ使用できる
+- `by-name`変数や`by-name`フィールドのようなものはない
+- 今、あなたはなぜ引数に`Boolean`をとるシンプルな`myAssert`を書けないのか、と不思議に思うだろう
+
+```scala
+  def boolAssert(predicate: Boolean) =
+    if (assertionsEnabled && !predicate)
+      throw new AssertionError
+```
+
 - この形式はもちろん文法上正しく、この`boolAssert`を使ったコードは以前と全く同じように見える
 
 ```scala
  boolAssert(5 > 3)
 ```
+- それにも関わらず、この2つのアプローチの違いは覚えておく必要がある
+- なぜなら`boolAssert`のパラメータの型は`Boolean`で、`boolAssert(5 > 3)`の括弧の中の式は`boolAssert`が呼び出される前に評価される
+- `boolAssert`に渡る時、``5 > 3`の式がtrueとなる
+- 反対に、`byNameAssert`のパラメータの型は`=>`なので、`byNameAssert(5 > 3)`の括弧の内側は`byNameAssert`が呼び出される前には評価されない
+- その代わりに、適用メソッドが`5 > 3`を評価する関数値が作成され、この関数値は`byNameAssert`に渡される
+- それ故、この2つのアプローチの違いは、アサート機能がdisableの時にある
+- `boolAssert`には、引数の括弧の内側の式に副作用があり、`byNameAssert`にはないことが分かるだろう
+- 例えば、アサート機能がdisableの場合でも、`boolAssert`では"`x / 0 == 0"をチェックすると例外が発生する
+
+```scala
+  scala> var assertionsEnabled = false
+  assertionsEnabled: Boolean = false
+
+  scala> boolAssert(x / 0 == 0)
+  java.lang.ArithmeticException: / by zero
+           at .<init>(<console>:8)
+          at .<clinit>(<console>)
+          at RequestResult$.<init>(<console>:3)
+          at RequestResult$.<clinit>(<console>)...
+```
+
+- しかし、同じコードでも`byNameAssert`の場合、例外が発生しない
+
+```scala
+scala> byNameAssert(x / 0 == 0)
+```
+
+# 9.6 Conclusion
+
+- この章は、制御抽象概念を構築する為のScalaの豊富な関数サポートを構築する方法を紹介した
+- コードにある一般的な制御パターンを取り除く関数を使うことができ、Scalaのライブラリにある、プログラマのコードに横断的に共通する制御パターンを再利用する為の高階関数の利点を得ることができる
+- この章は、高階関数を使って短く書く為にカリー化や`by-name`パラメータの使い方も紹介した
+- 前章とこの章では、関数についてとても多くのことを見てきた
+- 次からの数章では言語のオブジェクト指向の機能の議論に戻る
 
 # 単語
 - vary: 変わる、変化する
