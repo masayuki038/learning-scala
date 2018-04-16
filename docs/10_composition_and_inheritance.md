@@ -48,6 +48,50 @@ hello ***
 - どうルールを満たすか？
 - これらの問いに答えられるのであれば、ライブラリの設計は順調に進んでいる
 
+# 10.2 Abstract classes
+
+- 最初のタスクはレイアウト要素を表現する`Element`型を定義することである
+- 要素は文字列で構成される2つの次元の矩形なので、レイアウト要素を参照する`contents`というメンバを持つ
+- `contents`は、おのおのの文字列が1行になっている`Array[String]`で表現される
+- それゆえ、`contents`によって返された結果の方もまた`Array[String]`である
+
+```scala
+    abstract class Element {
+      def contents: Array[String]
+    }
+```
+
+- このクラスでは、`contents`は実装を持たないメソッドとして宣言される
+- 言い換えると、そのメソッドは`Element`クラスの抽象メンバである
+- 抽象メンバを持つクラスは`class`キーワードの前に`abstract`と書くことで抽象クラスとして宣言する必要がある
+
+```scala
+  abstract class Element ...
+```
+
+- `abstract`修飾子は、実装されていない抽象メンバがあることを示す
+- 結果として、抽象クラスをインスタンス化することはできない
+- インスタンス化しようとすると、以下のようにコンパイルエラーがでる
+
+```scala
+  scala> new Element
+  <console>:5: error: class Element is abstract;
+      cannot be instantiated
+         new Element
+             ^
+```
+
+- この章の後で、未定義の部分を実装してインスタンス化できるように`Element`クラスのサブクラスの作り方を紹介する
+- Note: `Element`クラスの実装されたメンバには`abstract`修飾子を付けない
+- 実装が無いメソッドが`abstract`である
+- Javaと異なり、メソッド宣言に`abstract`修飾子は必要無い
+- 実装されているメソッドは`concrete`と呼ばれる
+- 「宣言」と「定義」は少し異なる
+- `Element`クラスは`abstract`メソッドを宣言しているが、`concrete`メソッドは定義していない
+- しかしながら、次のセクションでいくつかの`concrete`メソッドを定義することで`Element`を拡張する
+
 # 単語
 - fulfill: 実現させる、満たす、果たす
 - on track: 軌道に乗って、順調に進んで、再テストされて
+- make sence: 意味をなす、道理にかなう、うなずける
+- signify: ～を意味する、～を表す、示す
