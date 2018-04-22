@@ -168,6 +168,61 @@ def width: Int
 - 副作用があるような呼び出しをする時は、空括弧を付けることに気をつける
 - もう一つの考え方として、操作をする関数を呼び出す時には括弧を付け、単にプロパティにアクセスする時には括弧を付けない
 
+# 10.4 Extending classes
+
+- すでに見てきたように、`Element`がabstractなのでnewできない
+- それゆえ、elementを生成する為に、`Element`のサブクラスを作って抽象メソッドである`contents`を実装する必要がある
+
+```scala
+    class ArrayElement(conts: Array[String]) extends Element {
+      def contents: Array[String] = conts
+    }
+```
+
+- `ArrayElement`クラスは`Element`クラスを継承している
+- 継承する為には、Javaと同じようにクラス名の後に`extends`節を付ける
+
+```scala
+ ... extends Element ...
+```
+
+- 継承には2つの効果がある
+- 1つめは、`ArrayElement`は`Element`のprivate以外のメンバを継承する
+- 2つめは、`ArrayElement`が`Element`のサブタイプになる
+- `ArrayElement extends Element`とすると、`ArrayElementクラス`は`Element`クラスのサブクラスと呼ばれる
+- 反対に、`Element`は`ArrayElement`のスーパークラスである
+- `extends`節を省略すると、Scalaコンパイラは暗黙的に`scala.AnyRef`を継承したこととする
+- それゆえ、`Element`クラスは`AnyRef`クラスを暗黙的に継承していることになる
+- 継承はスーパークラスのメンバがサブクラスのメンバでもある、ということを意味する。但し2つ例外がある
+- 1つめは、スーパークラスのprivateメンバはサブクラスに継承されない
+- 2つめは、サブクラス側で同じ名前と同じ引数で実装されている場合、スーパークラスのメンバは継承されない
+- そのようなケースは、サブクラスのメンバがスーパークラスのメンバをオーバーライドしている、と言う
+- サブクラスのそのメンバが具象メソッドで、スーパークラスのそのメンバが抽象メソッドである場合、具象メソッドは抽象メソッドを実装している、と言う
+- 例えば、contentsメソッドは`Element`の抽象メソッドcontentsをオーバーライドしている
+- 反対に、`ArrayElement`はwidthメソッド、heightメソッドを`Element`から継承している
+- 例えば、`ArrayElement`である`ae`に対して、`ArrayElement`クラスにwidthメソッドが定義されていたかのように、`ae.width`で幅を問い合わせることができる
+
+```scala
+  scala> val ae = new ArrayElement(Array("hello", "world"))
+  ae: ArrayElement = ArrayElement@d94e60
+
+  scala> ae.width
+  res1: Int = 5
+```
+
+- サブタイピングは、スーパークラスの値が必要なところで、そのサブクラスの値を使うことができることを意味する
+
+```scala
+val e: Element = new ArrayElement(Array("hello"))
+```
+
+- 変数`e`は`Element`型として定義されているので、設定する値もまた`Element`であるべきである
+- 実際には、`ArrayElement`の方の値が設定されている
+- `ArrayElement`クラスは`Element`クラスを継承していて、結果として`ArrayElement`の型は`Element`の型と互換性があるので、これはOKである
+- 先の例では、`ArrayElement`と`Array[String]`の間に集約関係があることをも示している
+- この関係は`ArrayElement`が`Array[String]`から構成されており、Scalaコンパイラは`ArrayElement`クラスを引数で渡された`conts`の参照を保持するフィールドを持ったバイナリクラスとして出力するので、集約と呼ばれる
+- この章の10.11のセクションで、集約と継承の考え方について議論をする
+
 # 単語
 - fulfill: 実現させる、満たす、果たす
 - on track: 軌道に乗って、順調に進んで、再テストされて
@@ -176,3 +231,5 @@ def width: Int
 - reveal: 見せる、公開する、明らかにする
 - liberal: 大まかな、寛大な、自由主義の、
 - vice versa: 逆に
+- conversely: 逆に、反対に
+- as if: かのように
