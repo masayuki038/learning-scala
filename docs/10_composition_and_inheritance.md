@@ -223,6 +223,47 @@ val e: Element = new ArrayElement(Array("hello"))
 - この関係は`ArrayElement`が`Array[String]`から構成されており、Scalaコンパイラは`ArrayElement`クラスを引数で渡された`conts`の参照を保持するフィールドを持ったバイナリクラスとして出力するので、集約と呼ばれる
 - この章の10.11のセクションで、集約と継承の考え方について議論をする
 
+# 10.5 Overriding methods and fields
+
+- `uniform access principal`はScalaがJavaよりもフィールドやメソッドを区別せずに扱えるという一つの側面に過ぎない
+- もう一つの違いは、フィールドとメソッドが同じ名前空間に属している点である
+- これは引数無しのメソッドをフィールドでオーバーライドできるようにしている
+- 例えば、`ArrayElement`のcontentsの実装を、`Element`クラスの抽象メソッドの定義を変更すること無く、メソッドからフィールドに変更することができた
+
+```scala
+    class ArrayElement(conts: Array[String]) extends Element {
+      val contents: Array[String] = conts
+    }
+```
+
+- このバージョンの`ArrayElement`のcontentsフィールドは`Element`クラスの引数無しのcontentsメソッドの完璧な実装である
+- 一方で、Scalaでは同じクラス内の同じ名前でフィールドとメソッドを定義することが許されていないが、Javaは許されている
+- 例えば、以下のJavaコードはコンパイルできる
+
+```java
+  // This is Java
+  class CompilesFine {
+    private int f = 0;
+    public int f() {
+      return 1;
+    }
+  }
+```
+
+- しかしこれに対応するScalaのクラスはコンパイルできない
+
+```scala
+  class WontCompile {
+    private var f = 0 // Won't compile, because a field
+    def f = 1         // and method have the same name
+  }
+```
+
+- 一般的に、Javaに4つの名前空間があるのに対し、Scalaは2つしかない
+- Javaの4つの名前空間は、フィールド、メソッド、型、そしてパッケージである
+- 対してScalaは、`values`(フィールド、メソッド、パッケージ、シングルトンオブジェクト)と`types`(クラスとトレイト)のみである
+- Scalaがフィールドとメソッドを同じ名前空間に配置している理由はまさしく、引数無しのメソッドを`val`でオーバーライドできる点にある
+
 # 単語
 - fulfill: 実現させる、満たす、果たす
 - on track: 軌道に乗って、順調に進んで、再テストされて
@@ -233,3 +274,4 @@ val e: Element = new ArrayElement(Array("hello"))
 - vice versa: 逆に
 - conversely: 逆に、反対に
 - as if: かのように
+- uniformly: 均一に、一様に、滑らかに
