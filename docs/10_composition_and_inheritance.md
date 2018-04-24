@@ -264,6 +264,51 @@ val e: Element = new ArrayElement(Array("hello"))
 - 対してScalaは、`values`(フィールド、メソッド、パッケージ、シングルトンオブジェクト)と`types`(クラスとトレイト)のみである
 - Scalaがフィールドとメソッドを同じ名前空間に配置している理由はまさしく、引数無しのメソッドを`val`でオーバーライドできる点にある
 
+# 10.6 Defining parametric fields
+
+- 前のセクションの`ArrayElement`のクラスの定義について再度考えて見ると、単に`contents`フィールドにコピーするという目的で`conts`というパラメータを取っている
+- `conts`の名前は、`contents`というフィールド名っぽいもので衝突しないように付けられたように見える
+- これは、コードにいくつか不要、冗長、あるいは繰り返しがあるかもしれない兆候を示すコードの匂いだ
+- パラメータとフィールドを組み合わせて一つに扱う、パラメトリックフィールドを定義することにって回避できる
+
+```scala
+    class ArrayElement(
+      val contents: Array[String]
+    ) extends Element
+```
+
+- `contents`パラメータの前に`val`が付いている
+- これはフィールド名とパラメータ名を同時に同じ名前で定義する記法である
+- 具体的には、`ArrayElement`はクラスの外からアクセス可能な`contents`フィールドを持つことになる
+- このフィールドはパラメータの値で初期化される
+- パラメータの前に`var`を付けることもできる
+- この場合は、そのフィールドに値を再設定できる
+- 結局、`private`や`protected`のような修飾子を付けることが可能である
+- また、他のクラスメンバと同様、これらのパラメトリックフィールドをオーバーライドできる
+
+```scala
+ class Cat {
+    val dangerous = false
+  }
+  class Tiger(
+    override val dangerous: Boolean,
+    private var age: Int
+  ) extends Cat
+```
+
+- `Tiger`の定義は`オーバーライドされたdangerous`や`private`メンバである`age`を使って次のようにも定義できる
+
+```scala
+  class Tiger(param1: Boolean, param2: Int) extends Cat {
+    override val dangerous = param1
+    private var age = param2
+  }
+```
+
+- この2つのメンバは指定されたパラメータで初期化される
+- 我々はそれらの`param1`や`param2`といったパラメータの名前を適宜選ぶ
+- 大事なことは他のどんな名前とも衝突しないことだ
+
 # 単語
 - fulfill: 実現させる、満たす、果たす
 - on track: 軌道に乗って、順調に進んで、再テストされて
@@ -275,3 +320,4 @@ val e: Element = new ArrayElement(Array("hello"))
 - conversely: 逆に、反対に
 - as if: かのように
 - uniformly: 均一に、一様に、滑らかに
+- specifically: 具体的に
