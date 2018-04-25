@@ -309,6 +309,20 @@ val e: Element = new ArrayElement(Array("hello"))
 - 我々はそれらの`param1`や`param2`といったパラメータの名前を適宜選ぶ
 - 大事なことは他のどんな名前とも衝突しないことだ
 
+# 10.7 Invoking superclass constructors
+
+- 今、システムは`Element`クラスと`ArrayElement`クラスの2つのクラスから構成されている
+- 別のelementの表現方法を検討したとする
+- 例えば、クライアントは指定した文字列で1行を描画するレイアウト要素を欲しいとする
+- その場合、単にサブクラスを追加することができる
+
+```scala
+  class LineElement(s: String) extends ArrayElement(Array(s)) {
+    override def width = s.length
+    override def height = 1
+  }
+```
+
 # 単語
 - fulfill: 実現させる、満たす、果たす
 - on track: 軌道に乗って、順調に進んで、再テストされて
