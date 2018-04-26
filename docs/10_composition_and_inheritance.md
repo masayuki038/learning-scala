@@ -323,6 +323,14 @@ val e: Element = new ArrayElement(Array("hello"))
   }
 ```
 
+- `LineElement`は`ArrayElement`を継承していて、`ArrayElement`のコンストラクタは`Array[String]`のパラメータを取るので、`LineElement`はスーパークラスのプライマリコンストラクタの引数を渡す必要がある
+- スーパークラスのコンストラクタを呼び出す為には、スーパークラスの名前に続いて渡す引数を括弧に囲って記述するだけである
+- 例えば、`LineElement`は`ArrayElement`のプライマリコンストラクタに渡す配列を`ArrayElement`の名前の後ろに括弧で囲って置く
+
+```scala
+  ... extends ArrayElement(Array(s)) ...
+```
+
 # 単語
 - fulfill: 実現させる、満たす、果たす
 - on track: 軌道に乗って、順調に進んで、再テストされて
