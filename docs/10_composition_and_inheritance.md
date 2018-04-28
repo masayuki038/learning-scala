@@ -331,6 +331,65 @@ val e: Element = new ArrayElement(Array("hello"))
   ... extends ArrayElement(Array(s)) ...
 ```
 
+# 10.8 Using override modifiers
+
+override修飾子の話。
+
+override修飾子を付けてもオーバーラーイドする対象が無い場合にはエラーになる。
+
+```scala
+class LineElement(s: String) extends ArrayElement(Array(s)){
+  override def hight = 1
+}
+```
+
+```
+Error:(6, 16) method hight overrides nothing
+  override def hight = 1
+               ^
+```
+
+override修飾子を付けずにオーバーライドしてもエラーになる。
+
+```scala
+class LineElement(s: String) extends ArrayElement(Array(s)){
+  def height = 1
+}
+```
+
+```
+Error:(6, 7) overriding method height in class Element of type => Int;
+ method height needs `override' modifier
+  def height = 1
+      ^
+```
+
+サブクラス側ですでに実装されているメソッドを抽象クラスでオーバーライドするとどうなるか。
+
+```scala
+class LineElement(s: String) extends ArrayElement(Array(s)){
+  override def height = 1
+  def hidden(): Boolean = false
+}
+```
+
+という実装がある状態で、親クラスに`hidden`を追加する。
+
+```scala
+class ArrayElement(val contents: Array[String]) extends Element {
+  def hidden: Boolean = true
+}
+```
+
+```
+Error:(7, 7) overriding method hidden in class ArrayElement of type => Boolean;
+ method hidden needs `override' modifier
+  def hidden(): Boolean = false
+      ^
+```
+
+エラーになる。なので、子クラスですでに定義されているメソッドを親クラスで定義すると、このエラーで検出することができる。
+
 # 単語
 - fulfill: 実現させる、満たす、果たす
 - on track: 軌道に乗って、順調に進んで、再テストされて
@@ -343,3 +402,4 @@ val e: Element = new ArrayElement(Array("hello"))
 - as if: かのように
 - uniformly: 均一に、一様に、滑らかに
 - specifically: 具体的に
+- carry: 運ぶ、持っていく
