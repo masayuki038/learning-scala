@@ -390,6 +390,56 @@ Error:(7, 7) overriding method hidden in class ArrayElement of type => Boolean;
 
 エラーになる。なので、子クラスですでに定義されているメソッドを親クラスで定義すると、このエラーで検出することができる。
 
+# 10.9 Polymorphism and dynamic binding
+
+ポリモーフィズム、ダイナミックバインディングの話。
+
+```scala
+abstract class Element {
+  def demo(): Unit = {
+    println("Element's implementation invoked")
+  }
+}
+
+class ArrayElement extends Element {
+  override def demo(): Unit = {
+    println("ArrayElement's implementation invoked")
+  }
+}
+
+class LineElement extends ArrayElement {
+  override def demo(): Unit = {
+    println("LineElement's implementation invoked")
+  }
+}
+
+class UniformElement extends Element {
+  override def demo(): Unit ={
+    println("UniformElement's implementation invoked")
+  }
+}
+
+object Test {
+  def main(args: Array[String]): Unit = {
+    invokeDemo(new ArrayElement())
+    invokeDemo(new LineElement())
+    invokeDemo(new UniformElement())
+  }
+
+  def invokeDemo(e: Element): Unit = {
+    e.demo();
+  }
+}
+```
+
+```
+ArrayElement's implementation invoked
+LineElement's implementation invoked
+UniformElement's implementation invoked
+```
+
+`invokeDemo(e: Element)`で、`Element`で渡されたオブジェクトの`demo`メソッドを呼ぶと、実際のクラスの`demo`メソッドが呼び出される。
+
 # 単語
 - fulfill: 実現させる、満たす、果たす
 - on track: 軌道に乗って、順調に進んで、再テストされて
@@ -403,3 +453,4 @@ Error:(7, 7) overriding method hidden in class ArrayElement of type => Boolean;
 - uniformly: 均一に、一様に、滑らかに
 - specifically: 具体的に
 - carry: 運ぶ、持っていく
+- phenomenon: 現象
