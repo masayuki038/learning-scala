@@ -440,6 +440,53 @@ UniformElement's implementation invoked
 
 `invokeDemo(e: Element)`で、`Element`で渡されたオブジェクトの`demo`メソッドを呼ぶと、実際のクラスの`demo`メソッドが呼び出される。
 
+# 10.10 Declaring final members
+
+メンバをオーバーライドされたくない時は、そのメンバに`final`を付ける。
+
+```scala
+class ArrayElement extends Element {
+  final override def demo(): Unit = {
+    println("ArrayElement's implementation invoked")
+  }
+}
+
+class LineElement extends ArrayElement {
+  override def demo(): Unit = {
+    println("LineElement's implementation invoked")
+  }
+}
+```
+
+```
+Error:(16, 16) overriding method demo in class ArrayElement of type ()Unit;
+ method demo cannot override final member
+  override def demo(): Unit = {
+               ^
+```
+
+クラスを継承されたくない時は、クラスに`final`を付ける。
+
+```scala
+final class ArrayElement extends Element {
+  override def demo(): Unit = {
+    println("ArrayElement's implementation invoked")
+  }
+}
+
+class LineElement extends ArrayElement {
+  override def demo(): Unit = {
+    println("LineElement's implementation invoked")
+  }
+}
+```
+
+```
+Error:(15, 27) illegal inheritance from final class ArrayElement
+class LineElement extends ArrayElement {
+                          ^
+```
+
 # 単語
 - fulfill: 実現させる、満たす、果たす
 - on track: 軌道に乗って、順調に進んで、再テストされて
@@ -454,3 +501,4 @@ UniformElement's implementation invoked
 - specifically: 具体的に
 - carry: 運ぶ、持っていく
 - phenomenon: 現象
+- at times: 時には
