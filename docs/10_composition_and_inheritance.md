@@ -487,6 +487,12 @@ class LineElement extends ArrayElement {
                           ^
 ```
 
+# 10.11 Using composition and inheritance
+
+- 既存のクラスに対して新しいクラスを定義するには、継承と集約の2つの方法がある
+- 継承には、スーパークラスが変わってサブクラスが壊れるという不利な点がある
+- 継承を使うかどうかは、`is-a`の関係であるかどうかを考える
+
 # 単語
 - fulfill: 実現させる、満たす、果たす
 - on track: 軌道に乗って、順調に進んで、再テストされて
@@ -502,3 +508,5 @@ class LineElement extends ArrayElement {
 - carry: 運ぶ、持っていく
 - phenomenon: 現象
 - at times: 時には
+- in terms of: ～の点から、～では
+- suspicious: 疑わしい、疑い深い、疑っている
