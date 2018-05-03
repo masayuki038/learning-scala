@@ -493,6 +493,9 @@ class LineElement extends ArrayElement {
 - 継承には、スーパークラスが変わってサブクラスが壊れるという不利な点がある
 - 継承を使うかどうかは、`is-a`の関係であるかどうかを考える
 
+# 10.12 Implementing above, beside, and toString
+
+
 # 単語
 - fulfill: 実現させる、満たす、果たす
 - on track: 軌道に乗って、順調に進んで、再テストされて
@@ -510,3 +513,7 @@ class LineElement extends ArrayElement {
 - at times: 時には
 - in terms of: ～の点から、～では
 - suspicious: 疑わしい、疑い深い、疑っている
+- concatenate: ～を鎖状につなぐ
+- comprehensive: 理解力のある、包括的な、総合的な
+- telltale:  密告者、証拠、秘密
+- abbreviate: 略して書く、～に短縮する
