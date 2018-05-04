@@ -495,6 +495,28 @@ class LineElement extends ArrayElement {
 
 # 10.12 Implementing above, beside, and toString
 
+besideメソッドの実装を、以下のように書き換えた。
+
+```scala
+  def beside(that: Element): Element = {
+    val contents = new Array[String](this.contents.length)
+    for (i <- 0 until this.contents.length)
+      contents(i) = this.contents(i) + that.contents(i)
+    new ArrayElement(contents)
+  }
+```
+
+```scala
+  new ArrayElement(
+    for (
+      (line1, line2) <- this.contents zip that.contents
+    ) yield line1 + line2
+  )
+```
+
+- zipは、2つの配列の各要素を1つずつ取り出してペアにし、そのリストを返す
+- zipする配列の要素の数が違う場合、ペアが作れない部分はリストに含まれない
+- このように変更することにより、配列のインデックスの操作を避けることで、書き間違いを起きにくくする
 
 # 単語
 - fulfill: 実現させる、満たす、果たす
@@ -517,3 +539,4 @@ class LineElement extends ArrayElement {
 - comprehensive: 理解力のある、包括的な、総合的な
 - telltale:  密告者、証拠、秘密
 - abbreviate: 略して書く、～に短縮する
+- error-prone: 間違いやすい、間違いの元となる

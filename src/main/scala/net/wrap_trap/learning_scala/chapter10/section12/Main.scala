@@ -1,4 +1,4 @@
-package net.wrap_trap.learning_scala.chapter10.section10
+package net.wrap_trap.learning_scala.chapter10.section12
 
 import net.wrap_trap.learning_scala.chapter10.ArrayElement
 
@@ -7,9 +7,9 @@ object Main {
     val e1 = new ArrayElement(Array("+++++", "*****"))
     val e2 = new ArrayElement(Array("-----", "/////"))
     println("above: ")
-    e1.above(e2).contents.foreach(println)
+    print(e1.above(e2))
 
     println("\nbeside: ")
-    e1.beside(e2).contents.foreach(println)
+    print(e1.beside(e2))
   }
 }
