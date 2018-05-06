@@ -528,6 +528,13 @@ besideメソッドの実装を、以下のように書き換えた。
 - Factoryクラスは、Elementのコンパニオンオブジェクトとして実装するのが良い
 - Elementクラスのサブクラスは、クライアントが直接触らないので、privateクラスにすることができる
 
+# 10.14 Heighten and widen
+
+- これまでのコードは、Elementのheightやwidthが異なるケースに対応できていなかった
+- widenとheightenという2つのprivateメソッドを追加した
+- widenはaboveから呼び出され、幅を揃える為にパディングする。
+- heightenも同じように、besideから呼び出され、行をパディングする
+
 # 単語
 - fulfill: 実現させる、満たす、果たす
 - on track: 軌道に乗って、順調に進んで、再テストされて
