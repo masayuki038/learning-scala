@@ -56,6 +56,37 @@
 - これは、ScalaのコンパイラがScalaのプログラムをより効果的に実行する為の機能を持っている
 - 現時点では、`ScalaObject`はパターンマッチのスピードアップの為に内部で使う`$tag`という名前のメソッドを持っているのみである
 
+# 11.2 How primitives are implemented
+
+- ScalaはJavaと同様に整数を32-bitで保存する
+- これはJVMに対して効果的であり、Javaライブラリとの相互互換性があるという点でも重要である
+- 加算、積算等の標準的な演算は、プリミティブ演算として行う
+- しかしながら、整数がJavaのObjectとして必要な場合は、バックアップとして`java.lang.Integer`を使う
+- これは整数に対して`toString`が呼ばれた時や、Any型の変数に整数を束縛する時に起きる
+- `Int`の整数値のは必要な時に`java.lang.Integer`型に透過的に変換される
+
+```java
+  // This is Java
+  boolean isEqual(int x, int y) {
+    return x == y;
+  }
+
+  boolean isEqual(Integer x, Integer y) {
+    return x == y;
+  }
+  System.out.println(isEqual(421, 421));
+```
+
+- 実際、上記例で`isEqual`を呼び出した際に返ってくる値は`false`である
+- これは、`421`が2回boxingされ、`x`と`y`が別々のオブジェクトになっている
+- `==`は参照先が同じであることを意味し、`Integer`オブジェクトの参照が異なるので、`false`が返る
+- プリミティブと参照型で明確な違いがある
+
+
+
+
+
+
 # 単語
 
 - tailor: 服を仕立てる、合わせる、調整する
