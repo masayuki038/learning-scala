@@ -81,11 +81,45 @@
 - これは、`421`が2回boxingされ、`x`と`y`が別々のオブジェクトになっている
 - `==`は参照先が同じであることを意味し、`Integer`オブジェクトの参照が異なるので、`false`が返る
 - プリミティブと参照型で明確な違いがある
+- 実際、Scalaの等価演算`==`は型表現に対して透過的になるように設計されている
+- 値型においては、数値や真偽といった自然な等価比較となっている
+- 参照型の場合、`==`はObjectから継承した`equals`メソッドのエイリアスとして扱われる
+- そのメソッドはもともと参照の等価性を定義されていたが、それらの自然な等価を実装した多数のサブクラスにオーバーライドされている
+- これは、ScalaはJavaでありがちな文字列等価のトラップに引っかかることが決して無いことを意味する
 
+```java
+  scala> val x = "abcd".substring(2)
+  x: java.lang.String = cd
 
+  scala> val y = "abcd".substring(2)
+  y: java.lang.String = cd
 
+  scala> x == y
+  res12: Boolean = true
+```
 
+- Javaでは、`x`と`y`の比較は`false`になる
+- プログラマは`equals`を使うべきところだが、簡単に忘れる
+- しかしながら、ユーザ定義の等価よりも、参照の等価が必要なケースはある
+- 例えば、最高に効果的ないくつかのシチュエーションの例として、いくつかのクラスの`hash cons`とインスタンスの参照の等価を比較がある
+- これらのケースでは、`AnyRef`クラスに、参照を比較するオーバーライドできない`eq`メソッドがある
 
+```scala
+  scala> val x = new String("abc")
+  x: java.lang.String = abc
+
+  scala> val y = new String("abc")
+  y: java.lang.String = abc
+
+  scala> x == y
+  res13: Boolean = true
+
+  scala> x eq y
+  res14: Boolean = false
+
+  scala> x ne y
+  res15: Boolean = true
+```
 
 # 単語
 
