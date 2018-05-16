@@ -29,11 +29,6 @@
 - 全ての値クラスはAnyValのサブタイプであるが、値クラスのサブタイプではない
 - そのかわり、異なる値クラスの型の間で`implicit conversion`が効く
 
-# 11.3 Bottom types
-
-- Scalaのクラスヒエラルキの最下層は`scala.Null`と`scala.Nothing`である
-- これらはScalaのオブジェクト指向型システムのコーナーケースを扱う統一的な方法である
-
 ```scala
   scala> 42 max 43
   res4: Int = 43
@@ -124,6 +119,21 @@
 
   scala> x ne y
   res15: Boolean = true
+```
+
+# 11.3 Bottom types
+
+- Scalaのクラスヒエラルキの最下層は`scala.Null`と`scala.Nothing`である
+- これらはScalaのオブジェクト指向型システムのコーナーケースを扱う統一的な方法である
+- Nullはnull参照の型である
+- すべてのクラスのサブクラスである
+- Nullは値クラスと互換性がない
+
+```scala
+  scala> val i: Int = null
+  <console>:4: error: type mismatch;
+   found   : Null(null)
+   required: Int
 ```
 
 # 単語
