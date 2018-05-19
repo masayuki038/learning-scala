@@ -126,7 +126,7 @@
 - Scalaのクラスヒエラルキの最下層は`scala.Null`と`scala.Nothing`である
 - これらはScalaのオブジェクト指向型システムのコーナーケースを扱う統一的な方法である
 - Nullはnull参照の型である
-- すべてのクラスのサブクラスである
+- すべての参照型クラスのサブクラスである
 - Nullは値クラスと互換性がない
 
 ```scala
@@ -136,6 +136,29 @@
    required: Int
 ```
 
+- Nothingは、Scalaのクラスヒエラルキのかなり下層にいる
+- Nothingは他のすべての型のサブクラスである
+- しかしながら、このクラスの値は存在しない
+- Nothingの一つの使い方は異常終了のシグナルである
+- 例えば、Scalaの標準ライブラリの`Predef`オブジェクトのエラーメソッドがある
+
+```scala
+  def error(message: String): Nothing =
+    throw new RuntimeException(message)
+```
+
+- この戻し値は`Nothing`で、異常終了であることを示す
+- なぜなら、Nothingはすべての型のサブクラスなので、とても柔軟な方法で`error`のようなメソッドを使うことができる
+
+```scala
+  def divide(x: Int, y: Int): Int =
+    if (y != 0) x / y
+    else error("can't divide by zero")
+```
+
+- 上記のように、戻り値がIntであるものの、Nothingを返すことができる
+
 # 単語
 
 - tailor: 服を仕立てる、合わせる、調整する
+- whatsoever: 全く
