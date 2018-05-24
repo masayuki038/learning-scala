@@ -50,3 +50,21 @@
 
 - `phil`の型はトレイトのPhilosophicalである
 - それゆえ、`phil`変数は`Philosophical`をmix-inしたどんなオブジェクトでも割り当てることができる
+- 明示的にスーパークラスを継承しているクラスにトレイトをmix-inしたい場合や、複数のトレイトをmix-inしたい場合は`with`句を使う
+
+```scala
+    class Animal
+
+    class Frog extends Animal with Philosophical {
+      override def toString = "green"
+    }
+```
+
+```scala
+    class Animal
+    trait HasLegs
+
+    class Frog extends Animal with Philosophical with HasLegs {
+      override def toString = "green"
+    }
+```
