@@ -98,8 +98,98 @@
 - それゆえ、トレイトのない言語と比べると、Scalaでは少ない作業量で豊富なインターフェースを提供できる
 - トレイトを使ってインターフェースを豊かにしていくには、少数の抽象メソッド(薄い部分)と、多くの具象メソッドを定義する
 
+# 12.3 Example: Rectangular objects
+
+- グラフィックライブラリはしばしばいくつかの長方形を表現するためのクラスを多数持つ
+- 例えば、ウィンドウやビットマップイメージ、マウスで選択された範囲等
+- これらの使いやすい長方形のオブジェクトを作る為に、ライブラリがwidth, height left, right, topLeft等のような平面上の特性を問い合わせることができると良い
+- しかしながら、Javaのライブラリですべての長方形のオブジェクトに対してそれらの全てを提供するライブラリを書くのは負荷が高い
+- 反対に、Scalaでそのようなライブラリを書くのであれば、すべてのクラスにこれらのすべての便利なメソッドを簡単に提供できる
+- トレイトを使わない場合の最初のコードのイメージは以下のようになる
+
+```scala
+  class Point(val x: Int, val y: Int)
+
+  class Rectangle(val topLeft: Point, val bottomRight: Point) {
+    def left = topLeft.x
+    def right = bottomRight.x
+    def width = right - left
+    // and many more geometric methods...
+  }
+```
+
+- Rectangleクラスはプライマリコンストラクタtop-leftとbottom-rightという2つのPointを取る
+- そしてシンプルにこの2つのPointを計算することによって、`left`や`right`といった多数の便利なメソッドを実装する
+- もう一つのグラフィックライブラリが持つクラスは2-Dウィジェットである
+
+```scala
+  abstract class Component {
+    def topLeft: Point
+    def bottomRight: Point
+
+    def left = topLeft.x
+    def right = bottomRight.x
+    def width = right - left
+    // and many more geometric methods...
+  }
+```
+
+- この2つのクラスの`left`や`right`の定義は完全に同じである
+- 長方形のオブジェクトの他のクラスにおいても、ちょっとしたバリエーションの違いはあれど、同じものになる
+- この重複は豊富なトレイトによって削ることができる
+- そのトレイトは2つの抽象メソッドを持っている: 1つはオブジェクトの`top-left`を返すもので、もう一つは`bottom-right`を返すものである
+- それから、すべての他の平面のクエリの実装を提供することができる
+
+```scala
+    trait Rectangular {
+      def topLeft: Point
+      def bottomRight: Point
+
+      def left = topLeft.x
+      def right = bottomRight.x
+      def width = right - left
+      // and many more geometric methods...
+    }
+```
+
+- `Component`クラスは`Rectangular`が提供するすべての平面に関するメソッドを得るためにこのトレイトをmix-inする
+
+```scala
+  abstract class Component extends Rectangular {
+    // other methods...
+  }
+```
+
+- 同様に、`Rectangle`もそのトレイトをmix-inできる
+
+```scala
+  class Rectangle(val topLeft: Point, val bottomRight: Point)
+      extends Rectangular {
+
+    // other methods...
+  }
+```
+
+- これらの定義を与えると、`Rectangle`を作ることができ、`width`や`left`といった平面に関するメソッドを呼ぶことができる
+
+```scala
+  scala> val rect = new Rectangle(new Point(1, 1),
+             new Point(10, 10))
+  rect: Rectangle = Rectangle@3536fd
+
+  scala> rect.left
+  res2: Int = 1
+
+  scala> rect.right
+  res3: Int = 10
+
+  scala> rect.width
+  res4: Int = 9
+```
+
 # 単語
 
 - in terms of: ～に関して、～の観点から、～を単位として
 - large burden: 大きな負荷
+- rectangular: 長方形の、直角の
 
