@@ -216,6 +216,21 @@
 - それを使うと、それぞれの比較演算子を一つの比較メソッドで置き換えることができる
 - `Ordered`トレイトはこの一つのメソッドで、<, >, <=, >= の4つを定義する
 - それゆえ、`Ordered`トレイトは`compare`というメソッドを定義だけで、豊富な比較メソッドを得ることができる
+- もし`Ordered`トレイトを使って`Rational`に比較演算子を定義すると、次のようになる
+
+```scala
+  class Rational(n: Int, d: Int) extends Ordered[Rational] {
+    // ...
+    def compare(that: Rational) =
+      (this.numer * that.denom) - (that.numer * this.denom)
+  }
+```
+
+- まず、このバージョンの`Rational`は`Ordered`トレイトをmix-inしている
+- これまで見てきたトレイトとは違い、`Ordered`トレイトは型パラメータを取っている
+- 型パラメータは19章まで議論しないが、今理解しておくべきことは、`Ordered[C]`(Cは比較するクラス)をmix-inする必要があることである
+- この場合、`Rational`は`Ordered[Rational]`をmix-inする
+
 
 # 単語
 
