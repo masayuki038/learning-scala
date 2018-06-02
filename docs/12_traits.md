@@ -230,6 +230,50 @@
 - これまで見てきたトレイトとは違い、`Ordered`トレイトは型パラメータを取っている
 - 型パラメータは19章まで議論しないが、今理解しておくべきことは、`Ordered[C]`(Cは比較するクラス)をmix-inする必要があることである
 - この場合、`Rational`は`Ordered[Rational]`をmix-inする
+- 次に、2つのオブジェクトを比較する比較メソッドを定義する必要がある
+- このメソッドは、引数で指定されたオブジェクトと自分自身を比較する
+- このメソッドは、2つのオブジェクトが等価であれば0を、引数で渡されたオブジェクトよりも少なければ負の数を、大きければ正の数を返す
+- この場合、`Rational`の比較メソッドは分数を共通分母と分子の引き算に変換する公式を使う
+- このmix-inと比較の定義を与えると、`Rational`クラスは全ての4つの比較メソッドを持つことになる
+
+```scala
+  scala> val half = new Rational(1, 2)
+  half: Rational = 1/2
+
+  scala> val third = new Rational(1, 3)
+  third: Rational = 1/3
+
+  scala> half < third
+  res5: Boolean = false
+
+  scala> half > third
+  res6: Boolean = true
+```
+
+- 何かの比較によって並べることができるクラスを実装するときは常に、`Ordered`トレイトをmix-inすることを考えるべきである
+- `Ordered`トレイトは`equals`を定義していない、なぜならそうすることができないからだ
+- その問題は、`equals`を実装するということは、渡されたオブジェクトの型をチェックする必要があるが、型消去により`Ordered`自身はこのチェックをできない
+- それゆえ、`Ordered`トレイトを継承していても`equals`メソッドを定義する必要がある。詳細は28章で説明する
+- 完全は`Ordered`トレイトは、コメントや余計なものを取り除くと以下のようになる
+
+```scala
+  trait Ordered[T] {
+    def compare(that: T): Int
+
+    def <(that: T): Boolean = (this compare that) < 0
+    def >(that: T): Boolean = (this compare that) > 0
+    def <=(that: T): Boolean = (this compare that) <= 0
+    def >=(that: T): Boolean = (this compare that) >= 0
+  }
+```
+
+- `T`や`[T]`を気にする必要はない
+- `T`は型パラメータで、詳細は19章で説明する
+- `Ordered`トレイトを理解する為に、それを"レシーバと同じ型を扱う"と考えるだけで良い
+- `Ordered`トレイトは`compare`という抽象メソッドを定義していて、それはレシーバと同じ型のオブジェクトを比較する想定になっている
+- このメソッドがあることによって、`Ordred`は<, >, <=, >= の操作を提供できる
+
+
 
 
 # 単語
@@ -238,3 +282,5 @@
 - large burden: 大きな負荷
 - rectangular: 長方形の、直角の
 - suppose: 思う、仮定する、推定する
+- formula: 定型句、決まり文句、公式
+- cruft: 嫌なもの、粗雑なつくり、ひどい結果
