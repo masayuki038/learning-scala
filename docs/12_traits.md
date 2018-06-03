@@ -273,8 +273,60 @@
 - `Ordered`トレイトは`compare`という抽象メソッドを定義していて、それはレシーバと同じ型のオブジェクトを比較する想定になっている
 - このメソッドがあることによって、`Ordred`は<, >, <=, >= の操作を提供できる
 
+# 12.5 Traits as stackable modifications
 
+- トレイトの一つの主要な使い方として、薄いインターフェースを豊富なものにする
+- 二つ目の使い方として、クラスにスカッカブルな変更を提供する
+- トレイトは、お互いに変更をスタックすることができるので、それを用いてクラスのメソッドを変更を促す
+- 例えば、整数のキューの変更をスタックすることを考える
+- そのキューは2つの操作を持つ: 1つはキューに整数を登録する、もうひとつはキューから整数を取り出す
+- キューはFIFOなので、`put`した順番に取り出すことができる
+- キューのような実装を持つクラスに対して、これらのような変更を行うトレイトを定義することができる
+  - 2倍にする: キューに`put`されているすべての整数を2倍にする
+  - インクリメント: キューに`put`されているすべての整数をインクリメントする
+  - キューから負の数をフィルタする
+- これらの3つのトレイトは変更として表現される、なぜならそれらはキューのフル実装よりむしろキューの振る舞いを変更するからである
+- その3つはスタッカブルである
+- それらの3つのうち好きなものを選択し、選択した変更が適用された新しいクラスを得ることができる
+- abstractな`IntQueue`クラスは以下のとおり。`IntQueue`は整数をキューに登録する為の`put`と、キューから整数を削除して返す`get`を持つ
 
+```scala
+    abstract class IntQueue {
+      def get(): Int
+      def put(x: Int)
+    }
+```
+
+- `ArrayBuffer`を使った`IntQueue`の基本的な実装は以下のとおり
+
+```scala
+    import scala.collection.mutable.ArrayBuffer
+
+    class BasicIntQueue extends IntQueue {
+      private val buf = new ArrayBuffer[Int]
+      def get() = buf.remove(0)
+      def put(x: Int) { buf += x }
+    }
+```
+
+- `BasicIntQueue`は配列バッファをprivateフィールドに持つ
+- `get`メソッドはバッファの最後のエントリを削除するのに対して、`put`メソッドは最後に要素を追加する
+- 使い方は以下のようになる
+
+```scala
+  scala> val queue = new BasicIntQueue
+  queue: BasicIntQueue = BasicIntQueue@24655f
+
+  scala> queue.put(10)
+
+  scala> queue.put(20)
+
+  scala> queue.get()
+  res9: Int = 10
+
+  scala> queue.get()
+  res10: Int = 20
+```
 
 # 単語
 
@@ -284,3 +336,4 @@
 - suppose: 思う、仮定する、推定する
 - formula: 定型句、決まり文句、公式
 - cruft: 嫌なもの、粗雑なつくり、ひどい結果
+- stackable: 積み重ねられる、積み重ね可能な
