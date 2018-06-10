@@ -342,6 +342,92 @@
 - この目的でそうする時、そのようなメソッドに`abstract override`と付ける
 - この変更の組み合わせはクラスではなくトレイトのメンバにのみ許可されている
 - そして、そのトレイトはメソッドの具体的な実装を持ったクラスにmix-inされる必要があることを意味する
+- このような単純なトレイトにも多くのことがある。そのトレイトの使い方は以下のとおり
+
+```scala
+  scala> class MyQueue extends BasicIntQueue with Doubling
+  defined class MyQueue
+
+  scala> val queue = new MyQueue
+  queue: MyQueue = MyQueue@91f017
+
+  scala> queue.put(10)
+
+  scala> queue.get()
+  res12: Int = 20
+```
+
+- `MyQueue`には新しいコードが無い。単にトレイトをmix-inしているだけである
+- この場合、クラスを用意しなくても、直接 `BasicIntQueue with Doubling`と書くことができる
+
+```scala
+    scala> val queue = new BasicIntQueue with Doubling
+    queue: BasicIntQueue with Doubling = $anon$1@5fa12d
+
+    scala> queue.put(10)
+
+    scala> queue.get()
+    res14: Int = 20
+```
+
+- 変更をスタックする方法を確認する為に、`Incrementing`と`Filtering`という2つの変更トレイトを定義する
+
+```scala
+    trait Incrementing extends IntQueue {
+      abstract override def put(x: Int) { super.put(x + 1) }
+    }
+    trait Filtering extends IntQueue {
+      abstract override def put(x: Int) {
+        if (x >= 0) super.put(x)
+      }
+    }
+```
+
+- これらの変更を与えることで、キューにどの変更を追加するか選択することができる
+- 例えば、キューに負の値をフィルタしてすべての数値に1を加える2つの特定を追加する場合は以下のようになる
+
+```scala
+  scala> val queue = (new BasicIntQueue
+             with Incrementing with Filtering)
+  queue: BasicIntQueue with Incrementing with Filtering...
+
+  scala> queue.put(-1); queue.put(0); queue.put(1)
+
+  scala> queue.get()
+  res15: Int = 1
+
+  scala> queue.get()
+  res16: Int = 2
+```
+
+- mix-inする順番が重要になる
+- 詳細は次のセクションで説明するが、大まかに説明すると、より右側のトレイトが最初に効果を発揮する
+- mix-inされたクラスのメソッドを呼び出すと、最も右側のトレイトのメソッドが呼び出される
+- そのメソッドが`super`を呼び出すと、その左隣のトレイトのメソッドが呼び出される
+- 前記の例だと、まず`Filtering`の`put`が最初に呼ばれ、負の値が除去される
+- `Incrementing`の`put`が2番目に呼び出され、残った数値に1を追加する
+- もし順番を逆にした場合、まず最初に1を追加し、その後負の値が捨てられる
+
+```scala
+  scala> val queue = (new BasicIntQueue
+             with Filtering with Incrementing)
+  queue: BasicIntQueue with Filtering with Incrementing...
+
+  scala> queue.put(-1); queue.put(0); queue.put(1)
+
+  scala> queue.get()
+  res17: Int = 0
+
+  scala> queue.get()
+  res18: Int = 1
+
+  scala> queue.get()
+  res19: Int = 2
+```
+
+- 全体的に、このスタイルのコードは素晴らしい柔軟性をもたらす
+- この3つのトレイトの組み合わせと順序を用いてmix-inすることにより、16のクラスを定義することができる
+- 小さなコードで大きな柔軟性を確保できるので、スタッカブルな変更を適用できるかどうか気に留めておくべきである
 
 # 単語
 
