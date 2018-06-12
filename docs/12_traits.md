@@ -445,6 +445,33 @@
   q.put(42)  // which put would be called?
 ```
 
+- 最初の質問は、この呼出しでどのメソッドがよばれたか
+- 恐らく、ルールは最後のsuperclassが勝つことなので、このケースは`Doubling`のメソッドが呼ばれているだろう
+- `Doubling`は値を2倍にして`super.put`を呼び出す、それはそうだろう
+- インクリメントは行われない
+- 同様に、もし最初のクラスが勝つルールであれば、その結果は2倍にはならずインクリメントになる
+- それ故、どちらの順序も機能しない
+- プログラマは`super`がどの`superclass`のメソッドを指すのか正確に認識するのを楽しむことができる
+- 例えば、次のScalaライクなコードは、`Incrementing`と`Doubling`の両方を明示的に呼び出す
+
+```scala
+  // Multiple inheritance thought experiment
+  trait MyQueue extends BasicIntQueue
+      with Incrementing with Doubling {
+
+    def put(x: Int) {
+      Incrementing.super.put(x) // (Not real Scala)
+      Doubling.super.put(x)
+    }
+  }
+```
+
+- このアプローチは新しい問題を生む
+- この試みの冗長さは、大した問題ではない
+- 問題は、baseクラスの`put`メソッドが、1つはインクリメント、1つは2倍で、計2回呼びだされることだ
+- しかし、インクリメントされたものでも2倍にされたものでもない
+
+
 # 単語
 
 - in terms of: ～に関して、～の観点から、～を単位として
