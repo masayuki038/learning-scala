@@ -12,6 +12,43 @@
 - 通常はより一貫性を持った形式となる
 - すでにJavaを知っていてもこの章を読んでおいた方が良い
 
+# 13.1 Packages
+
+- ScalaのコードはJavaプラットフォームのグローバルなパッケージヒエラルキーに属する
+- この本で見てきたサンプルコードは無名パッケージだった
+- 名前付きのパッケージにコードを配置する方法が2つある
+- 一つは、ファイルの上部にpackage節を書くことで、ファイル全体の内容をパッケージに入れることができる
+
+```scala
+    package bobsrockets.navigation
+    class Navigator
+```
+
+- 上記のpackage節は`Navigator`を`bobsrockets.navigation`という名前のパッケージに配置する
+- Note: ScalaのコードはJavaのエコシステムの一部なので、外部に公開するScalaパッケージとしてはJavaの`reverse-domain-name`形式を踏襲することを進める
+- それゆえ、`Navigator`のパッケージのより良い名前は、`com.bobsrockets.navigation`だろう
+- しかしながら、この章では、より理解しやすくする為に"com."を省略する
+- Scalaにおいてコードをパッケージに配置するもう一つの方法は、C#の名前空間に似たやり方である
+- パッケージ節に続き、パッケージに入れる定義をカーリー括弧で囲む
+- とりわけ、この形式はファイルの一部を別のパッケージに入れることになる
+- 例えば、本体のコードをテストするコードを同じファイルの別のパッケージとして入れることができる
+
+```scala
+    package bobsrockets {
+      package navigation {
+
+        // In package bobsrockets.navigation
+        class Navigator
+
+        package tests {
+
+          // In package bobsrockets.navigation.tests
+          class NavigatorSuite
+        }
+      }
+    }
+```
+
 # 単語
 
 - extent: 範囲、規模、程度
@@ -19,3 +56,5 @@
 - devastating: 荒廃させる、破壊的な、圧倒的な
 - consequence: (続いて起こる、または必然的な)結果、成り行き、結果
 - seemingly: 一見
+- presumably: おそらく
+- among other things: とりわけ
