@@ -49,6 +49,29 @@
     }
 ```
 
+- 13.1で示したJavaライクな記法は、実際には13.2のようにより一般的な記法であるネスト形式のシンタックスシュガーでしかない
+- 事実、そのパッケージにネストさせる場合、13.3のアプローチはインデントを重ねなくて済む
+
+```scala
+    package bobsrockets.navigation {
+
+      // In package bobsrockets.navigation
+      class Navigator
+
+      package tests {
+
+        // In package bobsrockets.navigation.tests
+        class NavigatorSuite
+      }
+    }
+```
+
+- この記法のヒントは、Scalaのパッケージは本当にネストしてる、ということだ
+- それは、navigationパッケージは意味的にbobsrocketsというパッケージの内側にある
+- Javaパッケージは、階層的であるにもかかわらず、ネストしない
+- Javaでは、パッケージに名前を付ける時は常に、パッケージ階層のルートから始めなければならない
+- Scalaは言語をシンプルにする為により一般的なルールを使用している
+
 # 単語
 
 - extent: 範囲、規模、程度
@@ -58,3 +81,5 @@
 - seemingly: 一見
 - presumably: おそらく
 - among other things: とりわけ
+- semantically: 意味的に
+- despite: ～にもかかわらず、～をよそに、～の意に反して
