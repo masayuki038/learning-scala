@@ -478,30 +478,5 @@ scala> byNameAssert(x / 0 == 0)
 - 前章とこの章では、関数についてとても多くのことを見てきた
 - 次からの数章では言語のオブジェクト指向の機能の議論に戻る
 
-# 単語
-- vary: 変わる、変化する
-- vary from ～: ～とは異なる
-- condense: 凝縮させる、要約する、簡約する
-- so far so good: 今のところは順調
-- sloppy: ずさんな、乱雑な、薄くて味気ない
-- immense: 巨大な、計り知れない、すてきな
-- gìve ín: 提出する、手渡す、降参する
-- factor(動詞): 因数に分解する
-- sole: 唯一の、だけの、未婚の
-- clarification: 明確化、説明、浄化
-- precisely: 正確に、厳密に、詳細に
-- forth: 前へ、先へ、前方へ
-- back and forth: 堂々巡りの議論、後退したり前進したりの、行ったり来たりの
-- as well: なお、おまけに、その上
-- thereby: それによって
-- factor out: 取り除く
-- yet: まだ、けれども、さらに
-- in spirit: 内心では、心の中で、心では
-- effectively: 効果的に、効率的に、実際は
-- pleasing: 愉快な、心地よい、満足な
-- differ from ～ in that...: ...という点で～と（は）異なる
-- awkward: 不器用な、下手な、扱いにくい
-- precisely: 正確に、まさに、明瞭に
-- look exactly as before: 以前と全く同じに見える
 
 

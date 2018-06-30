@@ -538,27 +538,3 @@ besideメソッドの実装を、以下のように書き換えた。
 # 10.15 Putting it all together
 
 - ここまでのプログラムを使って、スパイラルを出力できる
-
-# 単語
-- fulfill: 実現させる、満たす、果たす
-- on track: 軌道に乗って、順調に進んで、再テストされて
-- make sence: 意味をなす、道理にかなう、うなずける
-- signify: ～を意味する、～を表す、示す
-- reveal: 見せる、公開する、明らかにする
-- liberal: 大まかな、寛大な、自由主義の、
-- vice versa: 逆に
-- conversely: 逆に、反対に
-- as if: かのように
-- uniformly: 均一に、一様に、滑らかに
-- specifically: 具体的に
-- carry: 運ぶ、持っていく
-- phenomenon: 現象
-- at times: 時には
-- in terms of: ～の点から、～では
-- suspicious: 疑わしい、疑い深い、疑っている
-- concatenate: ～を鎖状につなぐ
-- comprehensive: 理解力のある、包括的な、総合的な
-- telltale:  密告者、証拠、秘密
-- abbreviate: 略して書く、～に短縮する
-- error-prone: 間違いやすい、間違いの元となる
-- advent: 出現、到来
